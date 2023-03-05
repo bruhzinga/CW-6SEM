@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsEmail } from '@nestjs/class-validator';
+import { IsNotEmpty, IsEmail } from 'class-validator';
+import { Role } from '../entity/role.enum';
 
 export class UserDto {
   @IsNotEmpty()
@@ -12,4 +13,6 @@ export class UserDto {
   email: string;
 
   createdOn?: Date;
+
+  role: Role[];
 }

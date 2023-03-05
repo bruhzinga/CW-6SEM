@@ -2,11 +2,11 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDto } from './dto/user.dto';
-import { UserEntity } from 'users/entity/user.entity';
-import { toUserDto } from 'shared/mapper';
+import { UserEntity } from 'src/users/entity/user.entity';
+import { toUserDto } from 'src/shared/mapper';
 import { CreateUserDto } from './dto/user.create.dto';
 import { LoginUserDto } from './dto/user-login.dto';
-import { comparePasswords } from 'shared/utils';
+import { comparePasswords } from 'src/shared/utils';
 
 @Injectable()
 export class UsersService {
@@ -42,7 +42,7 @@ export class UsersService {
   }
 
   async create(userDto: CreateUserDto): Promise<UserDto> {
-    const { username, password, email } = userDto;
+    const { username, password, email, role } = userDto;
 
     // check if the user exists in the db
     const userInDb = await this.userRepo.findOne({ where: { username } });
@@ -54,6 +54,7 @@ export class UsersService {
       username,
       password,
       email,
+      role,
     });
 
     await this.userRepo.save(user);

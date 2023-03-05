@@ -1,21 +1,23 @@
 import {
-  Controller,
   Body,
-  Post,
+  Controller,
+  Get,
   HttpException,
   HttpStatus,
-  UsePipes,
-  Get,
+  Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { CreateUserDto } from 'users/dto/user.create.dto';
+import { CreateUserDto } from 'src/users/dto/user.create.dto';
 import { RegistrationStatus } from './interfaces/regisration-status.interface';
 import { AuthService } from './auth.service';
 import { LoginStatus } from './interfaces/login-status.interface';
 import { LoginUserDto } from '../users/dto/user-login.dto';
 import { JwtPayload } from './interfaces/payload.interface';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from './roles.guard';
+import { HasRoles } from './has-roles.decorator';
+import { Role } from '../users/entity/role.enum';
 
 @Controller('auth')
 export class AuthController {
@@ -44,6 +46,13 @@ export class AuthController {
   @Get('whoami')
   @UseGuards(AuthGuard())
   public async testAuth(@Req() req: any): Promise<JwtPayload> {
+    return req.user;
+  }
+
+  @Get('Admin')
+  @HasRoles(Role.Admin)
+  @UseGuards(AuthGuard(), RolesGuard)
+  public async Test(@Req() req: any): Promise<JwtPayload> {
     return req.user;
   }
 }
