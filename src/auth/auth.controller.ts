@@ -18,6 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from './roles.guard';
 import { HasRoles } from './has-roles.decorator';
 import { Role } from '../users/entity/role.enum';
+import { UserDto } from '../users/dto/user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -45,14 +46,14 @@ export class AuthController {
 
   @Get('whoami')
   @UseGuards(AuthGuard())
-  public async testAuth(@Req() req: any): Promise<JwtPayload> {
+  public async testAuth(@Req() req: any): Promise<UserDto> {
     return req.user;
   }
 
   @Get('Admin')
   @HasRoles(Role.Admin)
   @UseGuards(AuthGuard(), RolesGuard)
-  public async Test(@Req() req: any): Promise<JwtPayload> {
+  public async Test(@Req() req: any): Promise<UserDto> {
     return req.user;
   }
 }

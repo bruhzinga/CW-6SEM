@@ -1,10 +1,9 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
+  BeforeInsert,
   Column,
   CreateDateColumn,
-  OneToMany,
-  BeforeInsert,
+  Entity,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from './role.enum';
