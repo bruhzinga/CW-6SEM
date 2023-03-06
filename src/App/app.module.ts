@@ -3,8 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
+import { GenresModule } from '../genres/genres.module';
+import { APP_FILTER } from '@nestjs/core';
+import { TypeOrmFilter } from '../Exceptions/http-exception.filter';
+import { ImagesModule } from '../images/images.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -22,7 +25,15 @@ import { classes } from '@automapper/classes';
     }),
     AuthModule,
     UsersModule,
+    GenresModule,
+    ImagesModule,
     ConfigModule.forRoot(),
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: TypeOrmFilter,
+    },
   ],
 })
 export class AppModule {}

@@ -13,7 +13,7 @@ export class UserEntity {
   @PrimaryGeneratedColumn('uuid') id: string;
   @Column({ type: 'varchar', nullable: false, unique: true }) username: string;
   @Column({ type: 'varchar', nullable: false }) password: string;
-  @Column({ type: 'varchar', nullable: false }) email: string;
+  @Column({ type: 'varchar', nullable: false, unique: true }) email: string;
 
   @Column({ type: 'varchar', nullable: false, default: Role.User })
   role: Role[];
