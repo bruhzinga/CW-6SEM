@@ -9,7 +9,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Type } from './entities/image.entity';
 import * as fs from 'fs';
-const MullterOptions = (Type: Type) => {
+const MulterOptions = () => {
   return {
     fileFilter: (req, file, cb) => {
       if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
@@ -26,9 +26,8 @@ export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
   @Post('actor')
-  @UseInterceptors(FileInterceptor('file', MullterOptions(Type.actor)))
+  @UseInterceptors(FileInterceptor('file', MulterOptions()))
   async uploadActor(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
     const image = {
       filename: file.originalname,
       type: Type.actor,
@@ -41,7 +40,7 @@ export class ImagesController {
     return 'File uploaded successfully!';
   }
   @Post('director')
-  @UseInterceptors(FileInterceptor('file', MullterOptions(Type.director)))
+  @UseInterceptors(FileInterceptor('file', MulterOptions()))
   async uploadDirector(@UploadedFile() file: Express.Multer.File) {
     const image = {
       filename: file.filename,
@@ -55,7 +54,7 @@ export class ImagesController {
     return 'File uploaded successfully!';
   }
   @Post('poster')
-  @UseInterceptors(FileInterceptor('file', MullterOptions(Type.poster)))
+  @UseInterceptors(FileInterceptor('file', MulterOptions()))
   async uploadPoster(@UploadedFile() file: Express.Multer.File) {
     const image = {
       filename: file.filename,
