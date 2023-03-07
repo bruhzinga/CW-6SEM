@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { GenresModule } from '../genres/genres.module';
 import { ImagesModule } from '../images/images.module';
+import { VideosModule } from '../videos/videos.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ImagesModule } from '../images/images.module';
     UsersModule,
     GenresModule,
     ImagesModule,
+    VideosModule,
     ConfigModule.forRoot(),
   ],
 })
