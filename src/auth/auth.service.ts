@@ -8,6 +8,7 @@ import { UserDto } from 'src/users/dto/user.dto';
 import { JwtPayload } from './interfaces/payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import * as process from 'process';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +48,7 @@ export class AuthService {
     };
   }
 
-  async validateUser(payload: JwtPayload): Promise<UserDto> {
+  async validateUser(payload: JwtPayload): Promise<User> {
     const user = await this.usersService.findByPayload(payload);
     if (!user) {
       throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
@@ -55,10 +56,10 @@ export class AuthService {
     return user;
   }
 
-  private _createToken({ username, role }: UserDto): any {
+  private _createToken({ username }: User): any {
     const expiresIn = process.env.EXPIRESIN;
 
-    const user: JwtPayload = { username, role };
+    const user: JwtPayload = { username };
     const accessToken = this.jwtService.sign(user);
     return {
       expiresIn,

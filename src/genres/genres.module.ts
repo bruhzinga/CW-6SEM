@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { GenresService } from './genres.service';
 import { GenresController } from './genres.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '../users/entity/user.entity';
-import { GenreEntity } from './entities/genre.entity';
+import { PrismaService } from '../prisma/prisma.service';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GenreEntity])],
+  imports: [PrismaModule],
   controllers: [GenresController],
   providers: [GenresService],
 })

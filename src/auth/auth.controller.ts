@@ -17,8 +17,8 @@ import { JwtPayload } from './interfaces/payload.interface';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from './roles.guard';
 import { HasRoles } from './has-roles.decorator';
-import { Role } from '../users/entity/role.enum';
 import { UserDto } from '../users/dto/user.dto';
+import { Role } from '../users/entities/Role';
 
 @Controller('auth')
 export class AuthController {

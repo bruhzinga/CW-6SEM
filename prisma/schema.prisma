@@ -1,0 +1,40 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Genre {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(255)
+}
+
+model Image {
+  id       Int    @id @default(autoincrement())
+  filename String @unique @db.VarChar(255)
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(255)
+  User User[]
+}
+
+
+model User {
+  id        String   @id @default(dbgenerated("newsequentialid()")) @db.UniqueIdentifier
+  username  String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
+  createdOn DateTime @default(now())
+  updatedOn DateTime @default(now())
+  RoleId   Int
+  Role     Role     @relation(fields: [RoleId], references: [id])
+
+}
+
+

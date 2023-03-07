@@ -1,27 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserDto } from './dto/user.dto';
-import { UserEntity } from 'src/users/entity/user.entity';
-import { toUserDto } from 'src/shared/mapper';
 import { CreateUserDto } from './dto/user.create.dto';
 import { LoginUserDto } from './dto/user-login.dto';
 import { comparePasswords } from 'src/shared/utils';
+import { PrismaService } from '../prisma/prisma.service';
+import { Prisma, User } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepo: Repository<UserEntity>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async findOne(options?: object): Promise<UserDto> {
-    const user = await this.userRepo.findOne(options);
-    return toUserDto(user);
-  }
-
-  async findByLogin({ username, password }: LoginUserDto): Promise<UserDto> {
-    const user = await this.userRepo.findOne({ where: { username } });
+  async findByLogin({ username, password }: LoginUserDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { username },
+      include: { Role: true },
+    });
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
@@ -34,36 +27,42 @@ export class UsersService {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
 
-    return toUserDto(user);
+    return user;
   }
 
-  async findByPayload({ username }: any): Promise<UserDto> {
-    return await this.findOne({ where: { username } });
+  async findByPayload({ username }: any) {
+    const user = this.prisma.user.findFirst({
+      where: { username },
+      include: { Role: true },
+    });
+    return user;
   }
 
-  async create(userDto: CreateUserDto): Promise<UserDto> {
-    const { username, password, email, role } = userDto;
+  async create(userDto: CreateUserDto) {
+    const { username, email, role } = userDto;
+    const password = await bcrypt.hash(userDto.password, 10);
 
-    // check if the user exists in the db
-    const userInDb = await this.userRepo.findOne({ where: { username } });
+    // check if user exists in db
+    const userInDb = await this.prisma.user.findFirst({
+      where: { username },
+      include: { Role: true },
+    });
+
     if (userInDb) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
 
-    const user: UserEntity = await this.userRepo.create({
-      username,
-      password,
-      email,
-      role,
+    return this.prisma.user.create({
+      data: {
+        username,
+        password,
+        email,
+        Role: {
+          connect: {
+            name: role.toString(),
+          },
+        },
+      },
     });
-
-    await this.userRepo.save(user);
-
-    return toUserDto(user);
-  }
-
-  private _sanitizeUser(user: UserEntity) {
-    delete user.password;
-    return user;
   }
 }
