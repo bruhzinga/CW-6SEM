@@ -6,6 +6,8 @@ import { APP_FILTER } from '@nestjs/core';
 import { GenresModule } from '../genres/genres.module';
 import { ImagesModule } from '../images/images.module';
 import { VideosModule } from '../videos/videos.module';
+import { PeopleModule } from '../people/people.module';
+import { MoviesModule } from '../movies/movies.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { VideosModule } from '../videos/videos.module';
     GenresModule,
     ImagesModule,
     VideosModule,
+    PeopleModule,
+    MoviesModule,
     ConfigModule.forRoot(),
   ],
 })

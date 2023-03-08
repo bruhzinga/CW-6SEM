@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,16 +10,31 @@ datasource db {
 model Genre {
   id   Int    @id @default(autoincrement())
   name String @unique @db.VarChar(255)
+  movies Movie[]
 }
 
-model Image {
-  id       Int    @id @default(autoincrement())
-  filename String @unique @db.VarChar(255)
-}
+
 
 model Video {
   id       Int    @id @default(autoincrement())
   filename String @unique @db.VarChar(255)
+  movies   Movie[]
+}
+
+model Image {
+  id       Int      @id @default(autoincrement())
+  filename String   @unique @db.VarChar(255)
+  People   People[]
+  movies   Movie[]
+}
+
+model People {
+  id      Int   @id @default(autoincrement())
+  name    String @unique @db.VarChar(255)
+  profession  String @db.VarChar(255)
+  imageId Int
+  Image   Image  @relation(fields: [imageId], references: [id])
+  movies  PeopleOnMovies[]
 }
 
 model Role {
@@ -29,7 +43,6 @@ model Role {
   User User[]
 }
 
-
 model User {
   id        String   @id @default(dbgenerated("newsequentialid()")) @db.UniqueIdentifier
   username  String   @unique @db.VarChar(255)
@@ -37,9 +50,30 @@ model User {
   email     String   @unique @db.VarChar(255)
   createdOn DateTime @default(now())
   updatedOn DateTime @default(now())
-  RoleId   Int
-  Role     Role     @relation(fields: [RoleId], references: [id])
+  RoleId    Int
+  Role      Role     @relation(fields: [RoleId], references: [id])
+}
+
+model Movie{
+  id Int @id @default(autoincrement())
+  title String @db.VarChar(255)
+  description String
+  releaseDate DateTime
+  duration Int
+  numberOfViews Int @default(0)
+  rating Int?
+  Genre  Genre[]
+  Video  Video[]
+  Image  Image[]
+  People PeopleOnMovies[]
 
 }
 
-
+model PeopleOnMovies {
+  movieId Int
+  peopleId Int
+  Role String
+  Movie Movie @relation(fields: [movieId], references: [id])
+  People People @relation(fields: [peopleId], references: [id])
+  @@id([movieId, peopleId, Role])
+}
