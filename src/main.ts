@@ -23,6 +23,7 @@ async function bootstrap() {
       P2022: HttpStatus.BAD_REQUEST,
     }),
   );
+
   await app.listen(3000);
 }
 
