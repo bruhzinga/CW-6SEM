@@ -8,6 +8,10 @@ import { ImagesModule } from '../images/images.module';
 import { VideosModule } from '../videos/videos.module';
 import { PeopleModule } from '../people/people.module';
 import { MoviesModule } from '../movies/movies.module';
+import { CommentsModule } from '../comments/comments.module';
+import { FavouritesModule } from '../favourites/favourites.module';
+import { HistoryService } from '../history/history.service';
+import { HistoryModule } from '../history/history.module';
 
 @Module({
   imports: [
@@ -18,6 +22,9 @@ import { MoviesModule } from '../movies/movies.module';
     VideosModule,
     PeopleModule,
     MoviesModule,
+    CommentsModule,
+    FavouritesModule,
+    HistoryModule,
     ConfigModule.forRoot(),
   ],
 })

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreatePeopleDto } from './DTO/create-people-dto';
+import { CreatePeopleDto } from './DTO/create-people.dto';
 import { People } from '@prisma/client';
 
 @Injectable()
@@ -50,7 +50,6 @@ export class PeopleService {
       },
       select: {
         name: true,
-
         movies: {
           select: {
             Role: true,

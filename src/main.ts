@@ -23,7 +23,7 @@ async function bootstrap() {
       P2022: HttpStatus.BAD_REQUEST,
     }),
   );
-
+  app.enableCors();
   await app.listen(3000);
 }
 

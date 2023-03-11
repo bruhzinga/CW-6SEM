@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PeopleService } from './people.service';
-import { CreatePeopleDto } from './DTO/create-people-dto';
+import { CreatePeopleDto } from './DTO/create-people.dto';
+import { AddPeopleToMovieDto } from './DTO/add-people-to-movie.dto';
 
 @Controller('people')
 export class PeopleController {
@@ -16,7 +17,7 @@ export class PeopleController {
   }
 
   @Post('AddPeopleToMovie')
-  async AddPeopleToMovie(@Body() body) {
+  async AddPeopleToMovie(@Body() body: AddPeopleToMovieDto) {
     const { peopleId, movieId, role } = body;
     return this.peopleService.AddPeopleToMovie(+peopleId, +movieId, role);
   }

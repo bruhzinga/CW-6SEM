@@ -8,72 +8,112 @@ datasource db {
 }
 
 model Genre {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(255)
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
   movies Movie[]
 }
 
-
-
 model Video {
-  id       Int    @id @default(autoincrement())
-  filename String @unique @db.VarChar(255)
+  id       Int     @id @default(autoincrement())
+  filename String  @unique
+  type     String
   movies   Movie[]
 }
 
 model Image {
   id       Int      @id @default(autoincrement())
-  filename String   @unique @db.VarChar(255)
+  filename String   @unique
   People   People[]
   movies   Movie[]
 }
 
 model People {
-  id      Int   @id @default(autoincrement())
-  name    String @unique @db.VarChar(255)
-  profession  String @db.VarChar(255)
-  imageId Int
-  Image   Image  @relation(fields: [imageId], references: [id])
-  movies  PeopleOnMovies[]
+  id         Int              @id @default(autoincrement())
+  name       String           @unique
+  profession String
+  imageId    Int
+  Image      Image            @relation(fields: [imageId], references: [id])
+  movies     PeopleOnMovies[]
+}
+
+
+
+model Movie {
+  id            Int              @id @default(autoincrement())
+  title         String
+  description   String
+  releaseDate   DateTime
+  duration      Int
+  numberOfViews Int              @default(0)
+  rating        Int?
+  Genre         Genre[]
+  Video         Video[]
+  Image         Image[]
+  People        PeopleOnMovies[]
+
+  Favorite Favorite[]
+  History  History[]
+  Comment  Comment[]
+}
+
+model PeopleOnMovies {
+  movieId  Int
+  peopleId Int
+  Role     String
+  Movie    Movie  @relation(fields: [movieId], references: [id])
+  People   People @relation(fields: [peopleId], references: [id])
+
+  @@id([movieId, peopleId, Role])
+}
+
+model Favorite {
+  userId  String
+  movieId Int
+  User    User   @relation(fields: [userId], references: [id])
+  Movie   Movie  @relation(fields: [movieId], references: [id])
+
+  @@id([userId, movieId])
+}
+
+model History {
+  userId  String
+  movieId Int
+  time    DateTime @default(now())
+  User    User   @relation(fields: [userId], references: [id])
+  Movie   Movie  @relation(fields: [movieId], references: [id])
+
+
+  @@id([userId, movieId,time])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  content   String?
+  createdOn DateTime @default(now())
+  userId    String
+  movieId   Int
+  User      User     @relation(fields: [userId], references: [id])
+  Movie     Movie    @relation(fields: [movieId], references: [id])
 }
 
 model Role {
   id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(255)
+  name String @unique
   User User[]
 }
 
 model User {
-  id        String   @id @default(dbgenerated("newsequentialid()")) @db.UniqueIdentifier
-  username  String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  email     String   @unique @db.VarChar(255)
-  createdOn DateTime @default(now())
-  updatedOn DateTime @default(now())
+  id        String     @id @default(uuid())
+  username  String     @unique
+  password  String
+  email     String     @unique
+  createdOn DateTime   @default(now())
+  updatedOn DateTime   @default(now())
   RoleId    Int
-  Role      Role     @relation(fields: [RoleId], references: [id])
+  Role      Role       @relation(fields: [RoleId], references: [id])
+  Favorite  Favorite[]
+  History   History[]
+  Comment   Comment[]
 }
 
-model Movie{
-  id Int @id @default(autoincrement())
-  title String @db.VarChar(255)
-  description String
-  releaseDate DateTime
-  duration Int
-  numberOfViews Int @default(0)
-  rating Int?
-  Genre  Genre[]
-  Video  Video[]
-  Image  Image[]
-  People PeopleOnMovies[]
-
-}
-
-model PeopleOnMovies {
-  movieId Int
-  peopleId Int
-  Role String
-  Movie Movie @relation(fields: [movieId], references: [id])
-  People People @relation(fields: [peopleId], references: [id])
-  @@id([movieId, peopleId, Role])
-}

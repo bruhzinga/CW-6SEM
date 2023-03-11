@@ -2,6 +2,7 @@ import {
   IsArray,
   IsDate,
   IsDateString,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsString,
