@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMovieDto } from './DTO/Create-movie-dto';
-import { Movie } from '@prisma/client';
+import { Movie, Prisma } from '@prisma/client';
 
 @Injectable()
 export class MoviesService {
@@ -26,6 +26,32 @@ export class MoviesService {
           connect:
             createMovieDto.image.map((image) => ({ id: image })) || undefined,
         },
+      },
+    });
+  }
+
+  async FindMovie(num: number) {
+    return this.prisma.movie.findUnique({
+      where: {
+        id: num,
+      },
+      include: {
+        Genre: {
+          select: {
+            name: true,
+          },
+        },
+        Video: {
+          select: {
+            id: true,
+          },
+        },
+        Image: {
+          select: {
+            id: true,
+          },
+        },
+        People: true,
       },
     });
   }
