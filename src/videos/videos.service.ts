@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVideoDto } from './DTO/CreateVideoDto';
-import { Video } from '@prisma/client';
+import { Prisma, Video } from '@prisma/client';
 
 @Injectable()
 export class VideosService {
@@ -24,5 +24,12 @@ export class VideosService {
     if (!video)
       throw new HttpException('Video not found', HttpStatus.NOT_FOUND);
     return video;
+  }
+
+  update(id: number, data: Prisma.VideoUpdateInput) {
+    return this.prisma.video.update({
+      where: { id },
+      data,
+    });
   }
 }

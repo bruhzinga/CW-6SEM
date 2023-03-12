@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Res,
   StreamableFile,
@@ -59,5 +60,23 @@ export class ImagesController {
   @Get()
   async LoadAll() {
     return this.imagesService.findAll();
+  }
+
+  @Patch(':id')
+  @UseInterceptors(FileInterceptor('file', MulterOptions))
+  async Update(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const ImageData = await this.imagesService.findOne(+id);
+    if (ImageData) {
+      const stream = fs.createWriteStream(
+        `FileStorage/Images/${ImageData.filename}`,
+      );
+      stream.write(file.buffer);
+      return 'File updated successfully!';
+    } else {
+      throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
+    }
   }
 }

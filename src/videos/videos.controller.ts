@@ -7,6 +7,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Redirect,
   Res,
@@ -73,5 +74,25 @@ export class VideosController {
   @Get()
   async LoadAll() {
     return this.videosService.findAll();
+  }
+
+  @Patch(':id')
+  @UseInterceptors(FileInterceptor('file'))
+  async updateVideo(
+    @Param('id') id: string,
+    @Body() body: { type: Type },
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const { type } = body;
+    const VideoData = await this.videosService.findOne(+id);
+    if (!VideoData)
+      throw new HttpException('Video not found', HttpStatus.NOT_FOUND);
+    this.videosService.update(+id, { type: type || VideoData.type });
+    const filenameFormatted = file.originalname.replace(/ /g, '_');
+    const stream = fs.createWriteStream(
+      `FileStorage/Videos/${filenameFormatted}`,
+    );
+    stream.write(file.buffer);
+    return 'File updated successfully!';
   }
 }

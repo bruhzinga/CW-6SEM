@@ -21,4 +21,15 @@ export class FavouritesService {
       },
     });
   }
+
+  deleteFavourite(movieId: number, userId: string) {
+    return this.prisma.favorite.delete({
+      where: {
+        userId_movieId: {
+          userId,
+          movieId,
+        },
+      },
+    });
+  }
 }
