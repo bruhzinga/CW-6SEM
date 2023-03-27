@@ -1,3 +1,4 @@
+/*
 export { fakeBackend };
 
 function fakeBackend() {
@@ -10,7 +11,7 @@ function fakeBackend() {
 
             function handleRoute() {
                 switch (true) {
-                    case url.endsWith('/users/authenticate') && opts.method === 'POST':
+                    case url.endsWith('/users/login') && opts.method === 'POST':
                         return authenticate();
                     case url.endsWith('/users') && opts.method === 'GET':
                         return getUsers();
@@ -68,3 +69,4 @@ function fakeBackend() {
         });
     }
 }
+*/

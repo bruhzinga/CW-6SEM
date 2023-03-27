@@ -36,7 +36,7 @@ function authHeader(url) {
 }
 
 function authToken() {
-    return store.getState().auth.user?.token;
+    return store.getState().auth.user?.accessToken;
 }
 
 function handleResponse(response) {
@@ -48,6 +48,14 @@ function handleResponse(response) {
                 // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
                 const logout = () => store.dispatch(authActions.logout());
                 logout();
+            }
+
+            let message = data.message;
+
+            if(Array.isArray(message)){
+
+            let error = message.join(" \n ")
+                return Promise.reject(error);
             }
 
             const error = (data && data.message) || response.statusText;

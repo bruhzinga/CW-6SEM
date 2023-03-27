@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
 import { history, fetchWrapper } from '_helpers';
 
 // create slice
@@ -39,40 +38,71 @@ function createReducers() {
 }
 
 function createExtraActions() {
-    const baseUrl = `${process.env.REACT_APP_API_URL}/users`;
+    const baseUrl = `${process.env.REACT_APP_API_URL}/auth`;
+
 
     return {
-        login: login()
-    };    
+        login: login(),
+        register: register()
+    };
 
     function login() {
         return createAsyncThunk(
             `${name}/login`,
-            async ({ username, password }) => await fetchWrapper.post(`${baseUrl}/authenticate`, { username, password })
+            async ({ username, password }) => await fetchWrapper.post(`${baseUrl}/login`, { username, password })
+        );
+    }
+
+    function register() {
+        return createAsyncThunk(
+            `${name}/register`,
+            async ({ username, email, password }) => await fetchWrapper.post(`${baseUrl}/register`, { username, email, password,role:"User"  })
         );
     }
 }
 
 function createExtraReducers() {
     return {
-        ...login()
+        ...login(),
+        ...register()
     };
 
     function login() {
-        var { pending, fulfilled, rejected } = extraActions.login;
+        let { pending, fulfilled, rejected } = extraActions.login;
         return {
             [pending]: (state) => {
                 state.error = null;
             },
             [fulfilled]: (state, action) => {
                 const user = action.payload;
-                
+
+                console.log(user);
+
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
                 state.user = user;
 
                 // get return url from location state or default to home page
                 const { from } = history.location.state || { from: { pathname: '/' } };
+                history.navigate(from);
+            },
+            [rejected]: (state, action) => {
+                state.error = action.error;
+            }
+        };
+    }
+
+    function register() {
+        let { pending, fulfilled, rejected } = extraActions.register;
+        return {
+            [pending]: (state) => {
+                state.error = null;
+            },
+            [fulfilled]: (state, action) => {
+
+
+                // get return url from location state or default to home page
+                const { from } = history.location.state || { from: { pathname: '/login' } };
                 history.navigate(from);
             },
             [rejected]: (state, action) => {

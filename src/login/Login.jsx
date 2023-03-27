@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { history } from '_helpers';
 import { authActions } from '_store';
+import {Register} from "../register/Register";
+import {Link, NavLink} from "react-router-dom";
 
 export { Login };
 
@@ -38,10 +40,7 @@ function Login() {
 
     return (
         <div className="col-md-6 offset-md-3 mt-5">
-            <div className="alert alert-info">
-                Username: test<br />
-                Password: test
-            </div>
+
             <div className="card">
                 <h4 className="card-header">Login</h4>
                 <div className="card-body">
@@ -66,6 +65,7 @@ function Login() {
                     </form>
                 </div>
             </div>
+            <NavLink to="/register">Dont have an account?</NavLink>
         </div>
     )
 }
