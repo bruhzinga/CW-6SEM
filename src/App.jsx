@@ -16,8 +16,7 @@ function App() {
 
     return (
         <div className="app-container bg-light">
-            <Nav />
-            <div className="container pt-4 pb-4">
+            <div>
                 <Routes>
                 <Route
                         path="/"
