@@ -13,12 +13,7 @@ function Home() {
     return (
         <div>
             <h1>Hi {authUser?.username}!</h1>
-            <p>You're logged in with React 18 + Redux & JWT!!</p>
-            <div></div>
-            <div>
 
-
-            </div>
            {/* <h3>Users from secure api end point:</h3>*/}
            {/* {users.length &&
                 <ul>
