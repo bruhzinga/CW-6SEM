@@ -1,8 +1,11 @@
+import "./style.css";
 import { useState } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
-import {Button, Layout, Menu, theme} from 'antd';
-import {authActions} from "../_store";
+import { useDispatch, useSelector } from 'react-redux';
+import { HeartFilled, HistoryOutlined, PlaySquareOutlined, TagOutlined } from '@ant-design/icons';
+import { Button, Layout, Menu } from 'antd';
+import { authActions } from "../_store";
+import { Favourites } from "../Favourites/Favourites";
+import { Main } from "../Main/Main";
 
 const { Header, Content, Sider } = Layout;
 
@@ -16,44 +19,57 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-    getItem('Option 1', '1', <PieChartOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-        getItem('Tom', '3'),
-        getItem('Bill', '4'),
-        getItem('Alex', '5'),
-    ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-    getItem('Files', '9', <FileOutlined />),
+    getItem('Main', 'Main', <PlaySquareOutlined style={{ fontSize: "24px" }} />),
+    getItem('Watch later', 'Watch later', <TagOutlined style={{ fontSize: "24px" }} />),
+    getItem('Favourites', 'Favourites', <HeartFilled style={{ fontSize: "24px" }} />),
+    getItem('History', 'History', <HistoryOutlined style={{ fontSize: "24px" }} />)
 ];
+
+function renderSwitch(param) {
+    switch (param) {
+        case 'Main':
+            return <Main />
+        case 'Favourites':
+            return <Favourites />
+        /*        case '3':
+                    return <History/>*/
+        default:
+            return 'default';
+
+    }
+}
 
 export function Home() {
     const dispatch = useDispatch();
     const logout = () => dispatch(authActions.logout());
-    const [selectedMenuKey, setSelectedMenuKey] = useState(null);
+    const [selectedMenuKey, setSelectedMenuKey] = useState("Main");
     const { user: authUser } = useSelector(x => x.auth);
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
+    const [collapsed, setCollapsed] = useState(true);
 
     const handleMenuSelect = ({ key }) => {
         setSelectedMenuKey(key);
     };
-    const [collapsed, setCollapsed] = useState(false);
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} />
+            <Sider
+                collapsible
+                collapsed={collapsed}
+                onCollapse={(value) => setCollapsed(value)}
+                style={{ position: 'fixed', height: '100vh' }}
+            >
+                <div style={{ height: 32, margin: 16, justifyContent: "center", textAlign: "center", color: "white" }} >
+                    {authUser?.username}
+                </div>
                 <Menu
                     theme="dark"
                     mode="inline"
                     items={items}
-                    defaultSelectedKeys={['1']}
+                    defaultSelectedKeys={['Main']}
                     onSelect={handleMenuSelect}
                 />
             </Sider>
-            <Layout className="site-layout">
+            <Layout className="site-layout" style={{ marginLeft: collapsed ? 80 : 200 }}>
                 <Header>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div>
@@ -64,9 +80,8 @@ export function Home() {
                         </div>
                     </div>
                 </Header>
-                <Content style={{ margin: '0 16px' }}>
-                    <h1>Hi {authUser?.username}!</h1>
-                    {selectedMenuKey && <p>Selected menu: {selectedMenuKey}</p>}
+                <Content style={{ margin: '24px 16px 0' }}>
+                    {selectedMenuKey && renderSwitch(selectedMenuKey)}
                 </Content>
             </Layout>
         </Layout>
