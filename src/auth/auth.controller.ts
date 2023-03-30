@@ -19,11 +19,13 @@ import { RolesGuard } from './roles.guard';
 import { HasRoles } from './has-roles.decorator';
 import { UserDto } from '../users/dto/user.dto';
 import { Role } from '../users/entities/Role';
+import {Public} from "./public-decorator";
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('register')
   public async register(
     @Body() createUserDto: CreateUserDto,
@@ -38,21 +40,20 @@ export class AuthController {
 
     return result;
   }
-
+  @Public()
   @Post('login')
   public async login(@Body() loginUserDto: LoginUserDto): Promise<LoginStatus> {
     return await this.authService.login(loginUserDto);
   }
 
   @Get('whoami')
-  @UseGuards(AuthGuard())
   public async testAuth(@Req() req: any): Promise<UserDto> {
     return req.user;
   }
 
   @Get('Admin')
   @HasRoles(Role.Admin)
-  @UseGuards(AuthGuard(), RolesGuard)
+  @UseGuards(RolesGuard)
   public async Test(@Req() req: any): Promise<UserDto> {
     return req.user;
   }

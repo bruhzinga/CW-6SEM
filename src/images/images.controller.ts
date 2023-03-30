@@ -16,6 +16,7 @@ import { ImagesService } from './images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as fs from 'fs';
 import { Response } from 'express';
+import {Public} from "../auth/public-decorator";
 
 const MulterOptions = {
   fileFilter: (req, file, cb) => {
@@ -43,6 +44,7 @@ export class ImagesController {
   }
 
   @Get(':id')
+  @Public()
   async Load(
     @Param('id') id: string,
     @Res({ passthrough: true }) res: Response,

@@ -21,6 +21,7 @@ import * as fs from 'fs';
 import { createReadStream, statSync } from 'fs';
 import { Response } from 'express';
 import { Type } from './DTO/CreateVideoDto';
+import { Public } from '../auth/public-decorator';
 
 const MulterOptions = {
   fileFilter: (req, file, cb) => {
@@ -66,6 +67,7 @@ export class VideosController {
   }
 
   @Redirect('http://localhost/stream/videos/')
+  @Public()
   async getStreamVideo(@Param('id') id: string) {
     const videoData = await this.videosService.findOne(+id);
     return { url: `http://localhost/videos/${videoData.filename}` };

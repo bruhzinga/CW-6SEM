@@ -6,4 +6,6 @@ export class LoginUserDto {
 
   @IsNotEmpty()
   readonly password: string;
+
+  readonly role: string;
 }
