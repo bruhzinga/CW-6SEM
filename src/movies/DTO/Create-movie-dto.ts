@@ -29,7 +29,7 @@ export class CreateMovieDto {
 
   @IsArray()
   @IsNotEmpty()
-  genre: string[];
+  genre: number[];
 
   @IsArray()
   @IsNotEmpty()
@@ -38,4 +38,8 @@ export class CreateMovieDto {
   @IsArray()
   @IsNotEmpty()
   image: number[];
+
+  @IsNumber()
+  @IsNotEmpty()
+  mainPoster: number;
 }

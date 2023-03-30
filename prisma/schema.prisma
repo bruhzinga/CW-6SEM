@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = "postgresql://postgres:admin@localhost:5432/PrimeVideo?schema=public"
 }
 
 model Genre {
@@ -25,6 +25,7 @@ model Image {
   filename String   @unique
   People   People[]
   movies   Movie[]
+  movie    Movie[]  @relation("MainPoster")
 }
 
 model People {
@@ -35,8 +36,6 @@ model People {
   Image      Image            @relation(fields: [imageId], references: [id])
   movies     PeopleOnMovies[]
 }
-
-
 
 model Movie {
   id            Int              @id @default(autoincrement())
@@ -50,10 +49,11 @@ model Movie {
   Video         Video[]
   Image         Image[]
   People        PeopleOnMovies[]
-
-  Favorite Favorite[]
-  History  History[]
-  Comment  Comment[]
+  Favorite      Favorite[]
+  History       History[]
+  Comment       Comment[]
+  mainPosterId  Int?
+  mainPoster    Image?           @relation("MainPoster", fields: [mainPosterId], references: [id])
 }
 
 model PeopleOnMovies {
@@ -79,11 +79,10 @@ model History {
   userId  String
   movieId Int
   time    DateTime @default(now())
-  User    User   @relation(fields: [userId], references: [id])
-  Movie   Movie  @relation(fields: [movieId], references: [id])
+  User    User     @relation(fields: [userId], references: [id])
+  Movie   Movie    @relation(fields: [movieId], references: [id])
 
-
-  @@id([userId, movieId,time])
+  @@id([userId, movieId, time])
 }
 
 model Comment {
@@ -116,4 +115,3 @@ model User {
   History   History[]
   Comment   Comment[]
 }
-

@@ -16,7 +16,12 @@ export class MoviesService {
         duration: createMovieDto.duration,
         Genre: {
           connect:
-            createMovieDto.genre.map((genre) => ({ name: genre })) || undefined,
+            createMovieDto.genre.map((genre) => ({ id: genre })) || undefined,
+        },
+        mainPoster: {
+          connect: {
+            id: createMovieDto.mainPoster,
+          },
         },
         Video: {
           connect:
@@ -53,6 +58,23 @@ export class MoviesService {
         },
         People: true,
       },
+    });
+  }
+
+  FindMoviesByGenre(genre: string, skip: number, take: number) {
+    return this.prisma.movie.findMany({
+      where: {
+        Genre: {
+          some: {
+            name: genre,
+          },
+        },
+      },
+      include: {
+        Image: true,
+      },
+      skip: skip,
+      take: take,
     });
   }
 }
