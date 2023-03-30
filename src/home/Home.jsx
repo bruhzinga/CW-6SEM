@@ -6,12 +6,14 @@ import { Button, Layout, Menu } from 'antd';
 import { authActions } from "../_store";
 import { Favourites } from "../Favourites/Favourites";
 import { Main } from "../Main/Main";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
+import {WatchLater} from "@mui/icons-material";
 
 const { Header, Content, Sider } = Layout;
 
-function getItem(label, key, icon, children) {
+function getItem(label, path, icon, children) {
     return {
-        key,
+        path,
         icon,
         children,
         label,
@@ -19,35 +21,23 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-    getItem('Main', 'Main', <PlaySquareOutlined style={{ fontSize: "24px" }} />),
-    getItem('Watch later', 'Watch later', <TagOutlined style={{ fontSize: "24px" }} />),
-    getItem('Favourites', 'Favourites', <HeartFilled style={{ fontSize: "24px" }} />),
-    getItem('History', 'History', <HistoryOutlined style={{ fontSize: "24px" }} />)
+    getItem('Main', '/', <PlaySquareOutlined style={{ fontSize: "24px" }} />),
+    getItem('Watch later', '/watch-later', <WatchLater style={{ fontSize: "26px" }} />),
+    getItem('Favourites', '/favourites', <HeartFilled style={{ fontSize: "24px" }} />),
+    getItem('History', '/history', <HistoryOutlined style={{ fontSize: "24px" }} />)
 ];
-
-function renderSwitch(param) {
-    switch (param) {
-        case 'Main':
-            return <Main />
-        case 'Favourites':
-            return <Favourites />
-        /*        case '3':
-                    return <History/>*/
-        default:
-            return 'default';
-
-    }
-}
 
 export function Home() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    let location = useLocation()
     const logout = () => dispatch(authActions.logout());
-    const [selectedMenuKey, setSelectedMenuKey] = useState("Main");
-    const { user: authUser } = useSelector(x => x.auth);
     const [collapsed, setCollapsed] = useState(true);
+    const { user: authUser } = useSelector(x => x.auth);
 
-    const handleMenuSelect = ({ key }) => {
-        setSelectedMenuKey(key);
+    const handleMenuSelect = ({ item }) => {
+        navigate(item.props.path);
+
     };
 
     return (
@@ -65,7 +55,7 @@ export function Home() {
                     theme="dark"
                     mode="inline"
                     items={items}
-                    defaultSelectedKeys={['Main']}
+                    defaultSelectedKeys={[location.pathname]}
                     onSelect={handleMenuSelect}
                 />
             </Sider>
@@ -81,7 +71,7 @@ export function Home() {
                     </div>
                 </Header>
                 <Content style={{ margin: '24px 16px 0' }}>
-                    {selectedMenuKey && renderSwitch(selectedMenuKey)}
+                    <Outlet />
                 </Content>
             </Layout>
         </Layout>

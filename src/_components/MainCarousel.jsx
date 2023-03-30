@@ -4,35 +4,35 @@ import { Carousel } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const styleDefaults = {
-    height: "50vh",
-    color: "white",
-    fontSize: 100,
-    textAlign: "center"
+    height: "66vh",
+    margin: "0 auto"
 };
 
-export function MainCarousel() {
+export function MainCarousel({fetchMovies}) {
+
+    let [movies, setMovies] = React.useState([]);
+
+    React.useEffect(() => {
+        fetchMovies(null, 0, 5)
+            .then((movies) => {
+                    setMovies(movies);
+                    console.log(movies)
+                }
+
+            )
+
+    }, [fetchMovies]);
+
+
     return (
         <div >
             <Carousel autoplay arrows prevArrow={<LeftOutlined/>} nextArrow={<RightOutlined/>}>
-                <div>
-                    <h3
-                        style={{
-                            backgroundColor: "red",
-                            ...styleDefaults
-                        }}
-                    >
-                        1
-                    </h3>
-                </div>
-                <div>
-                    <h3 style={{backgroundColor: "teal", ...styleDefaults}}>2</h3>
-                </div>
-                <div>
-                    <h3 style={{backgroundColor: "yellow", ...styleDefaults}}>3</h3>
-                </div>
-                <div>
-                    <h3 style={{backgroundColor: "blue", ...styleDefaults}}>4</h3>
-                </div>
+                {movies.map((movie) => (
+                    <div key={movie.id} onClick={()=>{
+                        console.log(movie.title)} }>
+                        <img src ={`${process.env.REACT_APP_API_URL}/images/${movie.mainPosterId}`} style={styleDefaults} />
+                    </div>
+                ))}
             </Carousel>
         </div>
     );

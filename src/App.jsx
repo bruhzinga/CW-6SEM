@@ -1,10 +1,15 @@
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
 import { history } from '_helpers';
-import { Nav, PrivateRoute } from '_components';
+import {  PrivateRoute } from '_components';
 import { Home } from 'home';
 import { Login } from 'login';
 import {Register} from "./register/Register";
+import {Main} from "./Main/Main";
+import {Favourites} from "./Favourites/Favourites";
+import History from "./History/History";
+import WatchLater from "./WatchLater/WatchLater";
+import Movie from "./Movie/Movie";
 
 export { App };
 
@@ -24,8 +29,13 @@ function App() {
                             <PrivateRoute>
                                 <Home />
                             </PrivateRoute>
-                        }
-                    />
+                        }>
+                    <Route path="/" element={<Main/>} />
+                    <Route path="/favourites" element={<Favourites/>} />
+                    <Route path="/watch-later" element={<WatchLater/>} />
+                    <Route path="/history" element={<History/>} />
+                    <Route path="/movie" element={<Movie/>} />
+                </Route>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="*" element={<Navigate to="/" />} />
@@ -34,3 +44,4 @@ function App() {
         </div>
     );
 }
+
