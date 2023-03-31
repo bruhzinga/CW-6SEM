@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material';
-import { Typography, Grid, Card, CardMedia, CardContent } from '@mui/material';
+import { Typography, Grid, Card, CardMedia, CardContent, Chip } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { fetchWrapper } from '../../_helpers';
 
 const Root = styled('div')({
     flexGrow: 1,
@@ -10,60 +12,121 @@ const Root = styled('div')({
 const Poster = styled(Card)({
     height: '100%',
 });
-
-const TrailerWrapper = styled('div')({
+const PosterImage = styled(CardMedia)({
+    height: '100%',
     width: '100%',
-    height: 0,
-    paddingBottom: '50%', // 16:9 aspect ratio
-    position: 'relative',
+    objectFit: 'cover'
 });
 
-const TrailerIframe = styled('iframe')({
+const TrailerWrapper = styled('div')({
+    position: 'relative',
+    width: '100%',
+});
+styled('iframe')({
+    position: 'absolute',
     width: '100%',
     height: '100%',
-    position: 'absolute',
     top: 0,
     left: 0,
 });
+const GenreChip = styled(Chip)({
+    marginRight: '8px',
+    marginBottom: '8px',
+});
+
+const convertMinutesToHourStringWithMinutes = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const minutesLeft = minutes % 60;
+    return `${hours}h ${minutesLeft}m`;
+};
+
+const GetMovieHeaderObject = (movieData) => {
+    return {
+        title: movieData?.title,
+        description: movieData?.description,
+        rating: movieData?.rating || 'N/A',
+        releaseYear: new Date(movieData?.releaseDate).getFullYear(),
+        runtime: convertMinutesToHourStringWithMinutes(movieData?.duration),
+        posterPath: `${process.env.REACT_APP_API_URL}/images/${movieData?.mainPosterId}`,
+        genres: movieData?.Genre.map((genre) => genre.name),
+        country: movieData?.Country || 'N/A',
+        trailerUrl: `${process.env.REACT_APP_API_URL}/videos/${
+            movieData?.Video.filter((video) => video.type === 'Trailer')[0]?.id
+        }`,
+    };
+};
 
 const MovieHeader = () => {
+    const { id } = useParams();
+    const [movieData, setMovieData] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await FetchMovieData(id);
+            setMovieData(data);
+        };
+        fetchData();
+    }, [id]);
+
+    const FetchMovieData = async (id) => {
+        return await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/movies/${id}`);
+    };
+
+    if (!movieData) {
+        return <div>Loading...</div>;
+    }
+
+    const { title, rating, releaseYear, runtime, posterPath, genres, country, trailerUrl, description } = GetMovieHeaderObject(
+        movieData
+    );
+
     return (
         <Root>
             <Typography variant="h3" gutterBottom>
-                The Movie
+                {title}
             </Typography>
             <Typography variant="h6" gutterBottom>
-                8.5 / 10
+                {rating} / 10
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
                     <Poster>
-                        <CardMedia
-                            component="img"
-                            image="/path/to/poster.jpg"
-                            alt="Movie Poster"
-                        />
+                        <PosterImage component="img" image={posterPath} alt="Movie Poster" />
                     </Poster>
                 </Grid>
                 <Grid item xs={12} md={8}>
                     <TrailerWrapper>
-                        <TrailerIframe
-                            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                        <CardMedia
+                            component="iframe"
                             title="Movie Trailer"
+                            src={trailerUrl}
                             allowFullScreen
-                        ></TrailerIframe>
+                            sx={{ aspectRatio: '16/9' }}
+                        />
                     </TrailerWrapper>
                 </Grid>
             </Grid>
             <Typography variant="subtitle1" gutterBottom>
-                2022 | 2h 15min
+                {releaseYear} | {runtime}
             </Typography>
             <Typography variant="subtitle2" gutterBottom>
-                Action, Adventure, Drama
+                Country: {country}
             </Typography>
-            <Typography variant="body1" gutterBottom>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed nisi finibus, tincidunt ex non, viverra nulla. Nullam in tincidunt velit. In lacinia eleifend turpis, at varius enim consequat sit amet. Nam ultrices tellus sed felis tempor vestibulum. Sed vel nisl vel nulla maximus pellentesque vel at tortor. Sed auctor tincidunt dui, nec faucibus ipsum accumsan id. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce blandit sapien ac augue congue, id iaculis augue venenatis. Duis quis massa magna. Praesent ut nibh tellus. Etiam imperdiet ante sit amet odio pharetra, eu sodales lacus volutpat. Donec quis nunc malesuada, iaculis magna vitae, fringilla orci.
+            <Typography variant="subtitle2" gutterBottom>
+                Genres:
+                {genres.map((genre) => (
+                    <GenreChip key={genre} label={genre} />
+                ))}
             </Typography>
+            <div style={{ marginTop: '30px', marginLeft: '20vh', marginRight: '20vh' }}>
+                <Typography
+                    variant="body1"
+                    gutterBottom
+                    style={{ color: '#555', fontSize: '1.2rem', padding: '20px 0' }}
+                >
+                    {description}
+                </Typography>
+            </div>
         </Root>
     );
 };

@@ -31,7 +31,6 @@ export function Main() {
 
 
     useEffect(() => {
-        console.log("useEffect  in Main called")
         fetchGenres()
             .then((genres) =>
                 setGenres(genres)

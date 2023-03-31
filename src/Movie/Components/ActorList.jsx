@@ -40,7 +40,7 @@ const Actor = ({ name, role, photoUrl }) => {
 
 const ActorsList = () => {
     return (
-        <Accordion>
+        <Accordion style={{marginRight:"10vh",marginLeft:"10vh"}}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography variant="h6">Cast</Typography>
             </AccordionSummary>

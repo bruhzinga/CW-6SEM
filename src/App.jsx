@@ -34,7 +34,7 @@ function App() {
                     <Route path="/favourites" element={<Favourites/>} />
                     <Route path="/watch-later" element={<WatchLater/>} />
                     <Route path="/history" element={<History/>} />
-                    <Route path="/movie" element={<Movie/>} />
+                    <Route path="/movie/:id" element={<Movie/>} />
                 </Route>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
