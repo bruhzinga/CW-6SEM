@@ -49,6 +49,7 @@ export class MoviesService {
         Video: {
           select: {
             id: true,
+            type: true,
           },
         },
         Image: {

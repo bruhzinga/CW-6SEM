@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './DTO/Create-movie-dto';
 import { Prisma } from '@prisma/client';
@@ -14,7 +23,15 @@ export class MoviesController {
 
   @Get(':id')
   async GetMovie(@Param('id') id: string) {
-    return this.moviesService.FindMovie(+id);
+    /* return (
+      (await this.moviesService.FindMovie(+id)) ?? throw new HttpException('Movie not found', HttpStatus.NOT_FOUND)
+    );*/
+    const movie = await this.moviesService.FindMovie(+id);
+    if (movie) {
+      return movie;
+    } else {
+      throw new HttpException('Movie not found', HttpStatus.NOT_FOUND);
+    }
   }
 
   // http://localhost:3000/movies?skip=0&take=5&genre=Horror

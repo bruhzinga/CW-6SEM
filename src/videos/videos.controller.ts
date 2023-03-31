@@ -2,15 +2,12 @@ import {
   Body,
   Controller,
   Get,
-  Header,
-  Headers,
   HttpException,
   HttpStatus,
   Param,
   Patch,
   Post,
   Redirect,
-  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,8 +15,6 @@ import { VideosService } from './videos.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PrismaService } from '../prisma/prisma.service';
 import * as fs from 'fs';
-import { createReadStream, statSync } from 'fs';
-import { Response } from 'express';
 import { Type } from './DTO/CreateVideoDto';
 import { Public } from '../auth/public-decorator';
 
@@ -67,6 +62,7 @@ export class VideosController {
   }
 
   @Redirect('http://localhost/stream/videos/')
+  @Get(':id')
   @Public()
   async getStreamVideo(@Param('id') id: string) {
     const videoData = await this.videosService.findOne(+id);
