@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowBack, ArrowForward } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
+import React, {useEffect, useState} from 'react';
+import {ArrowBack, ArrowForward} from '@mui/icons-material';
+import {styled} from '@mui/material/styles';
 import ReactPlayer from "react-player";
 
 const Root = styled('div')({

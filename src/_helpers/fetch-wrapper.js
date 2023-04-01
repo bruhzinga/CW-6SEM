@@ -1,4 +1,4 @@
-import { store, authActions } from '_store';
+import {authActions, store} from '../_store/index';
 
 export const fetchWrapper = {
     get: request('GET'),
@@ -27,7 +27,7 @@ function authHeader(url) {
     // return auth header with jwt if user is logged in and request is to the api url
     const token = authToken();
     const isLoggedIn = !!token;
-    const isApiUrl = url.startsWith(process.env.REACT_APP_API_URL);
+    const isApiUrl = url.startsWith(import.meta.env.VITE_API_URL);
     if (isLoggedIn && isApiUrl) {
         return { Authorization: `Bearer ${token}` };
     } else {
@@ -65,3 +65,4 @@ function handleResponse(response) {
         return data;
     });
 }
+export default fetchWrapper;

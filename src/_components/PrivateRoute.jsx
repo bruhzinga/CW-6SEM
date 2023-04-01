@@ -1,7 +1,7 @@
-import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import {Navigate} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 
-import { history } from '_helpers';
+import {history} from '@/_helpers/history';
 
 export { PrivateRoute };
 
@@ -16,3 +16,4 @@ function PrivateRoute({ children }) {
     // authorized so return child components
     return children;
 }
+export default PrivateRoute;

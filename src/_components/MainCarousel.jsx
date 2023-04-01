@@ -1,7 +1,7 @@
 import "./index.css"
 import React from "react";
-import { Carousel } from "antd";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import {Carousel} from "antd";
+import {LeftOutlined, RightOutlined} from "@ant-design/icons";
 
 const styleDefaults = {
     height: "66vh",
@@ -30,7 +30,7 @@ export function MainCarousel({fetchMovies}) {
                 {movies.map((movie) => (
                     <div key={movie.id} onClick={()=>{
                         console.log(movie.title)} }>
-                        <img src ={`${process.env.REACT_APP_API_URL}/images/${movie.mainPosterId}`} style={styleDefaults} />
+                        <img src ={`${import.meta.env.VITE_API_URL}/images/${movie.mainPosterId}`} style={styleDefaults} />
                     </div>
                 ))}
             </Carousel>

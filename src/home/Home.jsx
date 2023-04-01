@@ -1,21 +1,13 @@
 import "./style.css";
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { HeartFilled, HistoryOutlined, PlaySquareOutlined, TagOutlined } from '@ant-design/icons';
-import { Button, Layout, Menu } from 'antd';
-import { authActions } from "../_store";
-import { Favourites } from "../Favourites/Favourites";
-import { Main } from "../Main/Main";
+import {useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {HeartFilled, HistoryOutlined, PlaySquareOutlined, TagOutlined} from '@ant-design/icons';
+import {Button, Layout, Menu} from 'antd';
+import {authActions} from "@/_store";
+import {Favourites} from "@/Favourites/Favourites";
+import {Main} from "@/Main/Main";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
-import {
-    ImageOutlined,
-    Movie,
-    PeopleOutlined,
-    VideoFile,
-    VideoFileOutlined,
-    VideoSettings,
-    WatchLater
-} from "@mui/icons-material";
+import {ImageOutlined, Movie, PeopleOutlined, VideoFileOutlined, WatchLater} from "@mui/icons-material";
 
 const { Header, Content, Sider } = Layout;
 
@@ -96,3 +88,5 @@ export function Home() {
         </Layout>
     );
 }
+
+export default Home;

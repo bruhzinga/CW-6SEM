@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { styled } from '@mui/material';
-import { Typography, Grid, Card, CardMedia, CardContent, Chip } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { fetchWrapper } from '../../_helpers';
+import React, {useEffect, useState} from 'react';
+import {Card, CardMedia, Chip, Grid, styled, Typography} from '@mui/material';
+import {useParams} from 'react-router-dom';
+import fetchWrapper from "@/_helpers/fetch-wrapper";
+
 
 const Root = styled('div')({
     flexGrow: 1,
@@ -47,10 +47,10 @@ const GetMovieHeaderObject = (movieData) => {
         rating: movieData?.rating || 'N/A',
         releaseYear: new Date(movieData?.releaseDate).getFullYear(),
         runtime: convertMinutesToHourStringWithMinutes(movieData?.duration),
-        posterPath: `${process.env.REACT_APP_API_URL}/images/${movieData?.mainPosterId}`,
+        posterPath: `${import.meta.env.VITE_API_URL}/images/${movieData?.mainPosterId}`,
         genres: movieData?.Genre.map((genre) => genre.name),
         country: movieData?.Country || 'N/A',
-        trailerUrl: `${process.env.REACT_APP_API_URL}/videos/${
+        trailerUrl: `${import.meta.env.VITE_API_URL}/videos/${
             movieData?.Video.filter((video) => video.type === 'Trailer')[0]?.id
         }`,
     };
@@ -69,7 +69,7 @@ const MovieHeader = () => {
     }, [id]);
 
     const FetchMovieData = async (id) => {
-        return await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/movies/${id}`);
+        return await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/${id}`);
     };
 
     if (!movieData) {

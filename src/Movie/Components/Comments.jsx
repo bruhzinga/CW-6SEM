@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Button, Card, Divider, Input, Typography } from '@mui/material';
-import { CommentOutlined } from '@mui/icons-material';
+import React, {useState} from 'react';
+import {Button, Card, Divider, Input, Typography} from '@mui/material';
+import {CommentOutlined} from '@mui/icons-material';
 
 const FilmComments = () => {
     const [comments, setComments] = useState([]);

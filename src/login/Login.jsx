@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
-import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
+import {useEffect} from 'react';
+import {useForm} from "react-hook-form";
+import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { useSelector, useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
-import { history } from '_helpers';
-import { authActions } from '_store';
-import {Register} from "../register/Register";
-import {Link, NavLink} from "react-router-dom";
+import {history} from '@/_helpers/history';
+import {authActions} from '../_store/index';
+import {NavLink} from "react-router-dom";
 
 export { Login };
 
@@ -69,3 +68,5 @@ function Login() {
         </div>
     )
 }
+
+export default Login;

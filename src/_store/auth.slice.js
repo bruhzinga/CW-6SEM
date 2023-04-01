@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { history, fetchWrapper } from '_helpers';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {fetchWrapper} from '@/_helpers/fetch-wrapper';
+import {history} from '@/_helpers/history';
 
 // create slice
 
@@ -38,7 +39,7 @@ function createReducers() {
 }
 
 function createExtraActions() {
-    const baseUrl = `${process.env.REACT_APP_API_URL}/auth`;
+    const baseUrl = `${import.meta.env.VITE_API_URL}/auth`;
 
 
     return {
@@ -111,3 +112,4 @@ function createExtraReducers() {
         };
     }
 }
+

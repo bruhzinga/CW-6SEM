@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Typography, Accordion, AccordionSummary, AccordionDetails, Grid } from '@mui/material';
+import {Accordion, AccordionDetails, AccordionSummary, Avatar, Grid, Typography} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const actors = [

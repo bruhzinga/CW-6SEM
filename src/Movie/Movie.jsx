@@ -5,8 +5,7 @@ import VideoCarousel from "./Components/VideoCarousel";
 import ImageCarousel from "./Components/ImageCarousel";
 import Comments from "./Components/Comments";
 import {useNavigate, useParams} from "react-router-dom";
-import {fetchWrapper} from "../_helpers";
-
+import {fetchWrapper} from "@/_helpers/fetch-wrapper";
 
 
 function Movie(props) {
@@ -16,7 +15,7 @@ function Movie(props) {
     //if film with id does not exist, redirect to main page
     useEffect( () => {
         let getIds = [];
-        fetchWrapper.get(`${process.env.REACT_APP_API_URL}/movies/${id}`)
+        fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/${id}`)
             .then(async movie => {
                 await setMovie(movie);
                 getIds= await movie.Video.filter(item => item.type === 'Trailer').map(item => item.id);

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { ArrowBack, ArrowForward } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
+import React, {useState} from 'react';
+import {ArrowBack, ArrowForward} from '@mui/icons-material';
+import {styled} from '@mui/material/styles';
 
 const Root = styled('div')({
     display: 'flex',

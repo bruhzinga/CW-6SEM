@@ -1,11 +1,11 @@
 import "../_components/index.css";
-import React, { useEffect, useState } from "react";
-import { MainCarousel } from "../_components/MainCarousel";
+import React, {useEffect, useState} from "react";
+import {MainCarousel} from "@/_components/MainCarousel";
 import MovieGallery from "../_components/MovieGallery";
-import { fetchWrapper } from "../_helpers";
+import {fetchWrapper} from "@/_helpers/fetch-wrapper";
 
 const fetchGenres = async () => {
-    return await fetchWrapper.get(`${process.env.REACT_APP_API_URL}/genres`);
+    return await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/genres`);
 };
 
 
@@ -19,7 +19,7 @@ const fetchMovies = async (genre, skip, take) => {
     paramsForGet.append("take", take);
 
     return await fetchWrapper.get(
-        `${process.env.REACT_APP_API_URL}/movies?${paramsForGet}`
+        `${import.meta.env.VITE_API_URL}/movies?${paramsForGet}`
     );
 
 }

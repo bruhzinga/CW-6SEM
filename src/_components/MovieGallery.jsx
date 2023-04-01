@@ -1,14 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {
-    Button,
-    Card,
-    CardActionArea,
-    CardContent,
-    CardMedia,
-    Grid,
-    Typography,
-    styled,
-} from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Button, Card, CardActionArea, CardContent, CardMedia, Grid, styled, Typography,} from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const MovieCard = styled(Card)({
@@ -66,7 +57,7 @@ const MovieGallery = ({ categories, loadMore, cardsPerPage = 5 }) => {
                                 <CardActionArea href={movie.link}>
                                     <MovieMedia
                                         component="img"
-                                        image = {`${process.env.REACT_APP_API_URL}/images/${movie.mainPosterId}`}
+                                        image = {`${import.meta.env.VITE_API_URL}/images/${movie.mainPosterId}`}
                                         title={movie.title}
                                     />
                                     <CardContent>

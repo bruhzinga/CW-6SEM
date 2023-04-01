@@ -1,15 +1,17 @@
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import {Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom';
 
-import { history } from '_helpers';
-import {  PrivateRoute } from '_components';
-import { Home } from 'home';
-import { Login } from 'login';
+import {history} from './_helpers/history';
+
+
 import {Register} from "./register/Register";
 import {Main} from "./Main/Main";
 import {Favourites} from "./Favourites/Favourites";
 import History from "./History/History";
 import WatchLater from "./WatchLater/WatchLater";
 import Movie from "./Movie/Movie";
+import Home from "./home/Home";
+import Login from "./login/Login";
+import PrivateRoute from "./_components/PrivateRoute";
 
 export { App };
 
