@@ -1,6 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Card, CardActionArea, CardContent, CardMedia, Grid, styled, Typography,} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+    Button,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia,
+    Grid,
+    styled,
+    Typography,
+} from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Link } from 'react-router-dom';
 
 const MovieCard = styled(Card)({
     maxWidth: 345,
@@ -26,8 +36,8 @@ const MovieGallery = ({ categories, loadMore, cardsPerPage = 5 }) => {
     useEffect(() => {
         const fetchMovies = async () => {
             setLoading(true);
-            const newMovies = await loadMore(categories, startIndex, cardsPerPage+1);
-            setMovies(prevMovies => [...prevMovies, ...newMovies]);
+            const newMovies = await loadMore(categories, startIndex, cardsPerPage + 1);
+            setMovies((prevMovies) => [...prevMovies, ...newMovies]);
             setHasMoreMovies(newMovies.length === cardsPerPage);
             setLoading(false);
         };
@@ -51,21 +61,23 @@ const MovieGallery = ({ categories, loadMore, cardsPerPage = 5 }) => {
                     </Typography>
                 )}
                 <Grid container spacing={4} style={{}}>
-                    {movies?.map(movie => (
+                    {movies?.map((movie) => (
                         <Grid item md={2.2} key={movie.id}>
                             <MovieCard>
-                                <CardActionArea href={movie.link}>
-                                    <MovieMedia
-                                        component="img"
-                                        image = {`${import.meta.env.VITE_API_URL}/images/${movie.mainPosterId}`}
-                                        title={movie.title}
-                                    />
-                                    <CardContent>
-                                        <MovieTitle gutterBottom variant="h5" component="h2">
-                                            {movie.title}
-                                        </MovieTitle>
-                                    </CardContent>
-                                </CardActionArea>
+                                <Link to={`/movie/${movie.id}`}>
+                                    <CardActionArea>
+                                        <MovieMedia
+                                            component="img"
+                                            image={`${import.meta.env.VITE_API_URL}/images/${movie.mainPosterId}`}
+                                            title={movie.title}
+                                        />
+                                        <CardContent>
+                                            <MovieTitle gutterBottom variant="h5" component="h2">
+                                                {movie.title}
+                                            </MovieTitle>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Link>
                             </MovieCard>
                         </Grid>
                     ))}

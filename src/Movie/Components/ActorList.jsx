@@ -1,24 +1,8 @@
-import React from 'react';
-import {Accordion, AccordionDetails, AccordionSummary, Avatar, Grid, Typography} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Grid, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-const actors = [
-    {
-        name: 'Actor One',
-        role: 'Lead Actor',
-        photoUrl: '/path/to/actor1.jpg',
-    },
-    {
-        name: 'Actor Two',
-        role: 'Supporting Actor',
-        photoUrl: '/path/to/actor2.jpg',
-    },
-    {
-        name: 'Actor Three',
-        role: 'Supporting Actor',
-        photoUrl: '/path/to/actor3.jpg',
-    },
-];
+import {useParams} from "react-router-dom";
+import fetchWrapper from "@/_helpers/fetch-wrapper";
 
 const ActorAvatar = ({ src, alt }) => (
     <Avatar sx={{ width: 80, height: 80, marginRight: 2 }} alt={alt} src={src} />
@@ -39,8 +23,30 @@ const Actor = ({ name, role, photoUrl }) => {
 };
 
 const ActorsList = () => {
+    const [actors, setActors] = useState([]);
+    const { id } = useParams();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/${id}/people`);
+           const  formattedData = data.People.map((entree)=>{
+              return{
+                  role:entree.Role,
+                  name:entree.People.name,
+                  photoUrl:`${import.meta.env.VITE_API_URL}/images/${entree.People.Image.id}`
+               }
+
+           })
+
+
+            setActors(formattedData);
+        };
+
+        fetchData();
+    }, []);
+
     return (
-        <Accordion style={{marginRight:"10vh",marginLeft:"10vh"}}>
+        <Accordion style={{ marginRight: "10vh", marginLeft: "10vh" }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography variant="h6">Cast</Typography>
             </AccordionSummary>

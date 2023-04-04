@@ -6,6 +6,7 @@ import ImageCarousel from "./Components/ImageCarousel";
 import Comments from "./Components/Comments";
 import {useNavigate, useParams} from "react-router-dom";
 import {fetchWrapper} from "@/_helpers/fetch-wrapper";
+import FilmViewer from "@/Movie/Components/FilmViewer";
 
 
 function Movie(props) {
@@ -16,22 +17,23 @@ function Movie(props) {
     useEffect( () => {
         let getIds = [];
         fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/${id}`)
-            .then(async movie => {
-                await setMovie(movie);
-                getIds= await movie.Video.filter(item => item.type === 'Trailer').map(item => item.id);
-                setTrailerIds(getIds);
-
-
+            .then( async movie => {
+                setMovie(movie);
+                setTrailerIds( movie.Video.filter(item => item.type === 'Trailer').map(item => item.id));
+                setImageIds(movie.Image.map(item => item.id));
+                setFilmID(movie.Video.filter(item => item.type === 'Movie')[0].id);
             })
             .catch(() => {
                 navigate('/');
             });
-         console.log('ids ' + trailerIds);
 
     }, [id, navigate]);
 
     const [trailerIds, setTrailerIds] = useState([]);
     const [imageIds, setImageIds] = useState([]);
+    const [filmID, setFilmID] = useState(0);
+
+
 
 
 
@@ -43,7 +45,8 @@ function Movie(props) {
         <>
             <MovieHeader />
             <VideoCarousel VideoIds={trailerIds}/>
-            <ImageCarousel/>
+            <ImageCarousel imageIds={imageIds} />
+            <FilmViewer filmId={filmID}/>
             <ActorList/>
             <Comments/>
 

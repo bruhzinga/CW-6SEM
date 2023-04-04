@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {ArrowBack, ArrowForward} from '@mui/icons-material';
-import {styled} from '@mui/material/styles';
+import React, { useState } from 'react';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 
 const Root = styled('div')({
     display: 'flex',
@@ -25,7 +25,7 @@ const ImageContainer = styled('div')({
     border: '1px solid #ccc',
     borderRadius: '4px',
     overflow: 'hidden',
-    position: 'relative', // Added for outlining the selected image
+    position: 'relative',
 });
 
 const Image = styled('img')(({ theme }) => ({
@@ -47,7 +47,9 @@ const Thumbnail = styled('img')(({ theme, isSelected }) => ({
     marginLeft: '10px',
     marginRight: '10px',
     cursor: 'pointer',
-    border: isSelected ? `3px solid ${theme.palette.primary.main}` : `1px solid ${theme.palette.grey[300]}`, // Added for outlining the selected thumbnail
+    border: isSelected
+        ? `3px solid ${theme.palette.primary.main}`
+        : `1px solid ${theme.palette.grey[300]}`,
     borderRadius: theme.shape.borderRadius,
 }));
 
@@ -57,58 +59,60 @@ const Arrow = styled(ArrowBack)({
     color: '#555',
 });
 
-function ImageCarousel() {
+function ImageCarousel({ imageIds }) {
     const [selectedImage, setSelectedImage] = useState(null);
-    const images = [
-        {
-            id: 1,
-            imageUrl: 'https://images.pexels.com/photos/45170/kittens-cat-cat-puppy-rush-45170.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        },
-        {
-            id: 2,
-            imageUrl: 'https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        },
-        {
-            id: 3,
-            imageUrl: 'https://images.pexels.com/photos/45170/kittens-cat-cat-puppy-rush-45170.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        },
-        {
-            id: 4,
-            imageUrl: 'https://via.placeholder.com/800x450.png?text=Image+4',
-        },
-    ];
+    const [batchNumber, setBatchNumber] = useState(1);
+
+    const batchSize = 4;
+    const startIdx = (batchNumber - 1) * batchSize;
+    const endIdx = startIdx + batchSize;
+
+    const images = imageIds
+        .slice(startIdx, endIdx)
+        .map((id) => ({ id, imageUrl: `${import.meta.env.VITE_API_URL}/images/${id}` }));
 
     const handleImageClick = (image) => {
         setSelectedImage(image);
     };
 
     const handleLoadMore = (direction) => {
-        // TODO: implement loading more images
+        const numImages = imageIds.length;
+        const lastBatch = Math.ceil(numImages / batchSize);
+        let nextBatchNumber = batchNumber;
+        if (direction === 'left') {
+            nextBatchNumber = batchNumber - 1;
+        } else {
+            nextBatchNumber = batchNumber + 1;
+        }
+        if (nextBatchNumber < 1 || nextBatchNumber > lastBatch) {
+            return;
+        }
+        setBatchNumber(nextBatchNumber);
     };
 
-    // Set the first image as the selected image by default
     if (!selectedImage && images.length > 0) {
         setSelectedImage(images[0]);
     }
 
+    const canLoadMoreLeft = batchNumber > 1;
+    const canLoadMoreRight = endIdx < imageIds.length;
+
     return (
         <Root>
             <Header>Images</Header>
-            <ImageContainer>
-                {selectedImage && <Image src={selectedImage.imageUrl} alt={`Image ${selectedImage.id}`} />}
-            </ImageContainer>
+            <ImageContainer>{selectedImage && <Image src={selectedImage.imageUrl} alt={`Image ${selectedImage.id}`} />}</ImageContainer>
             <ThumbnailContainer>
-                <ArrowBack onClick={() => handleLoadMore('left')} />
-                {images.slice(0, 4).map((image) => (
+                <ArrowBack onClick={() => handleLoadMore('left')} disabled={!canLoadMoreLeft} />
+                {images.map((image => (
                     <Thumbnail
                         key={image.id}
                         src={image.imageUrl}
                         alt={`Image ${image.id}`}
-                        isSelected={selectedImage && selectedImage.id === image.id} // Added for outlining the selected thumbnail
                         onClick={() => handleImageClick(image)}
+                        isSelected={selectedImage && selectedImage.id === image.id}
                     />
-                ))}
-                <ArrowForward onClick={() => handleLoadMore('right')} />
+                )))}
+                <ArrowForward onClick={() => handleLoadMore('right')} disabled={!canLoadMoreRight} />
             </ThumbnailContainer>
         </Root>
     );

@@ -59,33 +59,51 @@ const Arrow = styled(ArrowBack)({
 
 function VideoCarousel( {VideoIds}) {
     const [selectedVideo, setSelectedVideo] = useState(null);
+    const [currentVideoSet, setCurrentVideoSet] = useState([]);
     const [videos, setVideos] = useState([]);
-    console.log('video ids: ', VideoIds)
+
 
     useEffect(() => {
-        const fetchVideos = async () => {
-            const response = await fetch('https://myapi.com/videos');
-            const data = await response.json();
-            setVideos(data);
+        const fetchVideos = () => {
+            const videoData = VideoIds.map((videoId) => {
+                return {
+                    videoUrl:`${import.meta.env.VITE_API_URL}/videos/${videoId}`,
+                    id: videoId,
+                };
+
+            });
+
+            setVideos(videoData);
+            setCurrentVideoSet(videoData.slice(0, 2));
         };
 
         fetchVideos();
-    }, []);
+
+    }, [VideoIds]);
+
+
 
     const handleVideoClick = (video) => {
         setSelectedVideo(video);
     };
 
     const handleLoadMore = (direction) => {
-        // TODO: implement loading more videos
+        const step = direction === 'left' ? -2 : 2;
+        const lastIndex = currentVideoSet.length - 1;
+        const lastVideoIndex = videos.findIndex((video) => video.id === currentVideoSet[lastIndex].id);
+        const newIndex = lastVideoIndex + step;
+
+        if (newIndex >= 0 && newIndex < videos.length) {
+            setCurrentVideoSet(videos.slice(newIndex, newIndex + 2));
+        }
     };
 
     // Set the first video as the selected video by default
     useEffect(() => {
-        if (!selectedVideo && videos.length > 0) {
-            setSelectedVideo(videos[0]);
+        if (!selectedVideo && currentVideoSet.length > 0) {
+            setSelectedVideo(currentVideoSet[0]);
         }
-    }, [videos, selectedVideo]);
+    }, [currentVideoSet, selectedVideo]);
 
     return (
         <Root>
@@ -96,8 +114,8 @@ function VideoCarousel( {VideoIds}) {
                 )}
             </VideoContainer>
             <ThumbnailContainer>
-                <ArrowBack onClick={() => handleLoadMore('left')} />
-                {videos.map((video) => (
+                <ArrowBack onClick={() => handleLoadMore('left')} disabled={currentVideoSet[0] === videos[0]} />
+                {currentVideoSet.map((video) => (
                     <Thumbnail
                         key={video.id}
                         src={video.thumbnailUrl}
@@ -106,7 +124,7 @@ function VideoCarousel( {VideoIds}) {
                         onClick={() => handleVideoClick(video)}
                     />
                 ))}
-                <ArrowForward onClick={() => handleLoadMore('right')} />
+                <ArrowForward onClick={() => handleLoadMore('right')} disabled={currentVideoSet[currentVideoSet.length - 1] === videos[videos.length - 1]} />
             </ThumbnailContainer>
         </Root>
     );

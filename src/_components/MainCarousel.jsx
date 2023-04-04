@@ -2,6 +2,7 @@ import "./index.css"
 import React from "react";
 import {Carousel} from "antd";
 import {LeftOutlined, RightOutlined} from "@ant-design/icons";
+import {useNavigate} from "react-router-dom";
 
 const styleDefaults = {
     height: "66vh",
@@ -9,6 +10,7 @@ const styleDefaults = {
 };
 
 export function MainCarousel({fetchMovies}) {
+    const navigate = useNavigate();
 
     let [movies, setMovies] = React.useState([]);
 
@@ -29,7 +31,8 @@ export function MainCarousel({fetchMovies}) {
             <Carousel autoplay arrows prevArrow={<LeftOutlined/>} nextArrow={<RightOutlined/>}>
                 {movies.map((movie) => (
                     <div key={movie.id} onClick={()=>{
-                        console.log(movie.title)} }>
+                        navigate(`/movie/${movie.id}`)
+                       } }>
                         <img src ={`${import.meta.env.VITE_API_URL}/images/${movie.mainPosterId}`} style={styleDefaults} />
                     </div>
                 ))}
