@@ -77,11 +77,12 @@ model Favorite {
 }
 
 model History {
-  userId  String
-  movieId Int
-  time    DateTime @default(now())
-  User    User     @relation(fields: [userId], references: [id])
-  Movie   Movie    @relation(fields: [movieId], references: [id])
+  userId   String
+  movieId  Int
+  time     DateTime @default(now())
+  progress Float    @default(0)
+  User     User     @relation(fields: [userId], references: [id])
+  Movie    Movie    @relation(fields: [movieId], references: [id])
 
   @@id([userId, movieId, time])
 }
