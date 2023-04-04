@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMovieDto } from './DTO/Create-movie-dto';
 import { Movie, Prisma } from '@prisma/client';
+import { retry } from 'rxjs';
 
 @Injectable()
 export class MoviesService {
@@ -76,6 +77,50 @@ export class MoviesService {
       },
       skip: skip,
       take: take,
+    });
+  }
+
+  GetPeople(filmID: number) {
+    return this.prisma.movie.findUnique({
+      where: {
+        id: filmID,
+      },
+      select: {
+        People: {
+          select: {
+            Role: true,
+            People: {
+              select: {
+                name: true,
+                Image: {
+                  select: {
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  GetComments(filmID: number) {
+    return this.prisma.movie.findUnique({
+      where: {
+        id: filmID,
+      },
+      select: {
+        Comment: {
+          include: {
+            User: {
+              select: {
+                username: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 }

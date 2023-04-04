@@ -95,6 +95,8 @@ model Comment {
   movieId   Int
   User      User     @relation(fields: [userId], references: [id])
   Movie     Movie    @relation(fields: [movieId], references: [id])
+
+  @@unique([userId, movieId])
 }
 
 model Role {

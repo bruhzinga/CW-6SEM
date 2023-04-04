@@ -47,7 +47,8 @@ export class VideosController {
   ) {
     const { type } = body;
     await this.prisma.$transaction(async () => {
-      const filenameFormatted = file.originalname.replace(/ /g, '_');
+      let filenameFormatted = file.originalname.replace(/ /g, '_');
+      filenameFormatted = file.originalname.replace(/#/g, '_');
       await this.videosService.create({
         filename: filenameFormatted,
         type: type || Type.Movie,

@@ -43,4 +43,14 @@ export class MoviesController {
   ) {
     return this.moviesService.FindMoviesByGenre(genre, +skip, +take);
   }
+
+  @Get(':id/people')
+  async GetPeople(@Param('id') id: string) {
+    return this.moviesService.GetPeople(+id);
+  }
+
+  @Get(':id/comments')
+  async GetComments(@Param('id') id: string) {
+    return this.moviesService.GetComments(+id);
+  }
 }
