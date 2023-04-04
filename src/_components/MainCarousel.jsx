@@ -1,4 +1,3 @@
-import "./index.css"
 import React from "react";
 import {Carousel} from "antd";
 import {LeftOutlined, RightOutlined} from "@ant-design/icons";
@@ -28,7 +27,7 @@ export function MainCarousel({fetchMovies}) {
 
     return (
         <div >
-            <Carousel autoplay arrows prevArrow={<LeftOutlined/>} nextArrow={<RightOutlined/>}>
+            <Carousel autoplay style={{cursor:"pointer"}}>
                 {movies.map((movie) => (
                     <div key={movie.id} onClick={()=>{
                         navigate(`/movie/${movie.id}`)

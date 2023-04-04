@@ -7,33 +7,41 @@ import {authActions} from "@/_store";
 import {Favourites} from "@/Favourites/Favourites";
 import {Main} from "@/Main/Main";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
-import {ImageOutlined, Movie, PeopleOutlined, VideoFileOutlined, WatchLater} from "@mui/icons-material";
+import {
+    AdminPanelSettings,
+    ImageOutlined,
+    Movie,
+    PeopleOutlined,
+    VideoFileOutlined,
+    WatchLater
+} from "@mui/icons-material";
 
 const { Header, Content, Sider } = Layout;
 
 function getItem(label, path, icon, children) {
     return {
+        label,
         path,
         icon,
         children,
-        label,
     };
 }
 
 const items = [
-    getItem('Main', '/', <PlaySquareOutlined style={{ fontSize: "24px" }} />),
+    getItem( 'Main', '/', <PlaySquareOutlined style={{ fontSize: "24px" }} />),
     getItem('Watch later', '/watch-later', <WatchLater style={{ fontSize: "26px" }} />),
     getItem('Favourites', '/favourites', <HeartFilled style={{ fontSize: "24px" }} />),
     getItem('History', '/history', <HistoryOutlined style={{ fontSize: "24px" }} />)
 ];
 
 const AdminItems = [
-    getItem('Genres', '/admin-genre', <TagOutlined style={{ fontSize: "24px" }} />),
-    getItem('Movies', '/admin-movie', <Movie style={{ fontSize: "24px" }} />),
-    getItem('Videos', '/admin-video', <VideoFileOutlined style={{ fontSize: "24px" }} />),
-    getItem('Images', '/admin-image', <ImageOutlined style={{ fontSize: "24px" }} />),
-    getItem('People', '/admin-person', <PeopleOutlined style={{ fontSize: "24px" }} />),
-
+    getItem('Admin', '/admin', <AdminPanelSettings style={{ fontSize: "24px" }} />,[
+        getItem('Genres', '/admin-genre', <TagOutlined style={{ fontSize: "24px" }} />),
+        getItem('Movies', '/admin-movie', <Movie style={{ fontSize: "24px" }} />),
+        getItem('Videos', '/admin-video', <VideoFileOutlined style={{ fontSize: "24px" }} />),
+        getItem('Images', '/admin-image', <ImageOutlined style={{ fontSize: "24px" }} />),
+        getItem('People', '/admin-person', <PeopleOutlined style={{ fontSize: "24px" }} />),
+        ])
 ];
 
 export function Home() {
@@ -45,7 +53,9 @@ export function Home() {
     const { user: authUser } = useSelector(x => x.auth);
 
     const handleMenuSelect = ({ item }) => {
-        navigate(item.props.path);
+        if(item.props.path !== location.pathname)
+            navigate(item.props.path);
+
 
     };
 
@@ -66,8 +76,8 @@ export function Home() {
                     items={
                         authUser?.role.name === 'Admin' ? [...items, ...AdminItems] : items
                     }
-                    defaultSelectedKeys={[location.pathname]}
                     onSelect={handleMenuSelect}
+                    selectedKeys={null}
                 />
             </Sider>
             <Layout className="site-layout" style={{ marginLeft: collapsed ? 80 : 200 }}>

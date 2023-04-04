@@ -15,7 +15,6 @@ function Movie(props) {
     const { id } = useParams();
     //if film with id does not exist, redirect to main page
     useEffect( () => {
-        let getIds = [];
         fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/${id}`)
             .then( async movie => {
                 setMovie(movie);

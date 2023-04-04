@@ -1,4 +1,3 @@
-import "../_components/index.css";
 import React, {useEffect, useState} from "react";
 import {MainCarousel} from "@/_components/MainCarousel";
 import MovieGallery from "../_components/MovieGallery";
