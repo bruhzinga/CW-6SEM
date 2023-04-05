@@ -14,6 +14,7 @@ import Login from "./login/Login";
 import PrivateRoute from "./_components/PrivateRoute";
 import AdminGenre from "@/AdminPanel/Ganres/GenresAdminPanel";
 import GenresAdminPanel from "@/AdminPanel/Ganres/GenresAdminPanel";
+import ImageAdminPanel from "@/AdminPanel/Images/ImageAdminPanel";
 
 export { App };
 
@@ -40,6 +41,7 @@ function App() {
                     <Route path="/history" element={<History/>} />
                     <Route path="/movie/:id" element={<Movie/>} />
                     <Route path='/admin/genre' element={<GenresAdminPanel/>} />
+                    <Route path='/admin/image' element={<ImageAdminPanel/>} />
 
                 </Route>
                     <Route path="/login" element={<Login />} />
