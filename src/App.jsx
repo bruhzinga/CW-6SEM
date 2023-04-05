@@ -12,6 +12,8 @@ import Movie from "./Movie/Movie";
 import Home from "./home/Home";
 import Login from "./login/Login";
 import PrivateRoute from "./_components/PrivateRoute";
+import AdminGenre from "@/AdminPanel/Ganres/GenresAdminPanel";
+import GenresAdminPanel from "@/AdminPanel/Ganres/GenresAdminPanel";
 
 export { App };
 
@@ -37,6 +39,8 @@ function App() {
                     <Route path="/watch-later" element={<WatchLater/>} />
                     <Route path="/history" element={<History/>} />
                     <Route path="/movie/:id" element={<Movie/>} />
+                    <Route path='/admin/genre' element={<GenresAdminPanel/>} />
+
                 </Route>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />

@@ -36,11 +36,11 @@ const items = [
 
 const AdminItems = [
     getItem('Admin', '/admin', <AdminPanelSettings style={{ fontSize: "24px" }} />,[
-        getItem('Genres', '/admin-genre', <TagOutlined style={{ fontSize: "24px" }} />),
-        getItem('Movies', '/admin-movie', <Movie style={{ fontSize: "24px" }} />),
-        getItem('Videos', '/admin-video', <VideoFileOutlined style={{ fontSize: "24px" }} />),
-        getItem('Images', '/admin-image', <ImageOutlined style={{ fontSize: "24px" }} />),
-        getItem('People', '/admin-person', <PeopleOutlined style={{ fontSize: "24px" }} />),
+        getItem('Genres', '/admin/genre', <TagOutlined style={{ fontSize: "24px" }} />),
+        getItem('Movies', '/admin/movie', <Movie style={{ fontSize: "24px" }} />),
+        getItem('Videos', '/admin/video', <VideoFileOutlined style={{ fontSize: "24px" }} />),
+        getItem('Images', '/admin/image', <ImageOutlined style={{ fontSize: "24px" }} />),
+        getItem('People', '/admin/person', <PeopleOutlined style={{ fontSize: "24px" }} />),
         ])
 ];
 
