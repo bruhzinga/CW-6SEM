@@ -19,7 +19,11 @@ export class GenresService {
   }
 
   async findAll(): Promise<Genre[]> {
-    const Genres = await this.prisma.genre.findMany();
+    const Genres = await this.prisma.genre.findMany({
+      orderBy: {
+        id: 'asc',
+      },
+    });
     return Genres;
   }
 

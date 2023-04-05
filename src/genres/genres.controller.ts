@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { GenresService } from './genres.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
@@ -29,7 +30,7 @@ export class GenresController {
     return this.genresService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateGenreDto: CreateGenreDto) {
     return this.genresService.update(+id, updateGenreDto);
   }
