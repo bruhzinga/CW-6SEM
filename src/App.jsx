@@ -12,9 +12,11 @@ import Movie from "./Movie/Movie";
 import Home from "./home/Home";
 import Login from "./login/Login";
 import PrivateRoute from "./_components/PrivateRoute";
-import AdminGenre from "@/AdminPanel/Ganres/GenresAdminPanel";
-import GenresAdminPanel from "@/AdminPanel/Ganres/GenresAdminPanel";
+import AdminGenre from "@/AdminPanel/Genres/GenresAdminPanel";
+import GenresAdminPanel from "@/AdminPanel/Genres/GenresAdminPanel";
 import ImageAdminPanel from "@/AdminPanel/Images/ImageAdminPanel";
+import PeopleAdminPanel from "@/AdminPanel/People/PeopleAdminPanel";
+import PeopleToMovieMap from "@/AdminPanel/PeopleToMovies/PeopleToMovieMap";
 
 export { App };
 
@@ -42,6 +44,8 @@ function App() {
                     <Route path="/movie/:id" element={<Movie/>} />
                     <Route path='/admin/genre' element={<GenresAdminPanel/>} />
                     <Route path='/admin/image' element={<ImageAdminPanel/>} />
+                    <Route path='/admin/people' element={<PeopleAdminPanel/>} />
+                    <Route path='/admin/people-map' element={<PeopleToMovieMap/>} />
 
                 </Route>
                     <Route path="/login" element={<Login />} />

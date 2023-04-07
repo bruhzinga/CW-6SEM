@@ -10,8 +10,8 @@ import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {
     AdminPanelSettings,
     ImageOutlined,
-    Movie,
-    PeopleOutlined,
+    Movie, PeopleAltRounded,
+    PeopleOutlined, PeopleTwoTone,
     VideoFileOutlined,
     WatchLater
 } from "@mui/icons-material";
@@ -40,7 +40,8 @@ const AdminItems = [
         getItem('Movies', '/admin/movie', <Movie style={{ fontSize: "24px" }} />),
         getItem('Videos', '/admin/video', <VideoFileOutlined style={{ fontSize: "24px" }} />),
         getItem('Images', '/admin/image', <ImageOutlined style={{ fontSize: "24px" }} />),
-        getItem('People', '/admin/person', <PeopleOutlined style={{ fontSize: "24px" }} />),
+        getItem('People', '/admin/people', <PeopleOutlined style={{ fontSize: "24px" }} />),
+        getItem('Map people to Movie', '/admin/people-map', <PeopleAltRounded style={{ fontSize: "24px" }} />),
         ])
 ];
 
