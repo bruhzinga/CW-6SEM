@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { PeopleService } from './people.service';
 import { CreatePeopleDto } from './DTO/create-people.dto';
 import { AddPeopleToMovieDto } from './DTO/add-people-to-movie.dto';
@@ -14,6 +22,20 @@ export class PeopleController {
   @Get(':id')
   async getPeople(@Param('id') id: string) {
     return this.peopleService.findOne(+id);
+  }
+  @Delete(':id')
+  async deletePeople(@Param('id') id: string) {
+    return this.peopleService.deletePeople(+id);
+  }
+
+  @Put(':id')
+  async updatePeople(@Param('id') id: string, @Body() body: CreatePeopleDto) {
+    return this.peopleService.updatePeople(+id, body);
+  }
+
+  @Get()
+  async getAllPeople() {
+    return this.peopleService.findAll();
   }
 
   @Post('AddPeopleToMovie')

@@ -63,4 +63,37 @@ export class PeopleService {
       },
     });
   }
+
+  findAll() {
+    return this.prisma.people.findMany({
+      include: {
+        Image: true,
+      },
+    });
+  }
+
+  deletePeople(id: number) {
+    return this.prisma.people.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
+
+  updatePeople(id: number, body: CreatePeopleDto) {
+    return this.prisma.people.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: body.name,
+        profession: body.profession,
+        Image: {
+          connect: {
+            id: body.imageId,
+          },
+        },
+      },
+    });
+  }
 }
