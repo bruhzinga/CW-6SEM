@@ -28,7 +28,7 @@ const ActorsList = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/${id}/people`);
+           const data = await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/${id}/people`);
            const  formattedData = data.People.map((entree)=>{
               return{
                   role:entree.Role,
