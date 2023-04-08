@@ -96,4 +96,14 @@ export class PeopleService {
       },
     });
   }
+
+  RemovePeopleFromMovie(peopleId: number, movieId: number, role: string) {
+    return this.prisma.peopleOnMovies.deleteMany({
+      where: {
+        movieId: movieId,
+        peopleId: peopleId,
+        Role: role,
+      },
+    });
+  }
 }

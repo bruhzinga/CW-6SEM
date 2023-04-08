@@ -15,6 +15,18 @@ import { AddPeopleToMovieDto } from './DTO/add-people-to-movie.dto';
 export class PeopleController {
   constructor(private readonly peopleService: PeopleService) {}
 
+  @Post('AddPeopleToMovie')
+  async AddPeopleToMovie(@Body() body: AddPeopleToMovieDto) {
+    const { peopleId, movieId, role } = body;
+    return this.peopleService.AddPeopleToMovie(+peopleId, +movieId, role);
+  }
+
+  @Delete('RemovePeopleFromMovie')
+  async RemovePeopleFromMovie(@Body() body: AddPeopleToMovieDto) {
+    const { peopleId, movieId, role } = body;
+    return this.peopleService.RemovePeopleFromMovie(+peopleId, +movieId, role);
+  }
+
   @Post()
   async createPeople(@Body() createPeopleDto: CreatePeopleDto) {
     return this.peopleService.createPeople(createPeopleDto);
@@ -36,11 +48,5 @@ export class PeopleController {
   @Get()
   async getAllPeople() {
     return this.peopleService.findAll();
-  }
-
-  @Post('AddPeopleToMovie')
-  async AddPeopleToMovie(@Body() body: AddPeopleToMovieDto) {
-    const { peopleId, movieId, role } = body;
-    return this.peopleService.AddPeopleToMovie(+peopleId, +movieId, role);
   }
 }

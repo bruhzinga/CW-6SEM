@@ -15,6 +15,10 @@ import { Prisma } from '@prisma/client';
 @Controller('movies')
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
+  @Get('titles')
+  async GetTitles() {
+    return this.moviesService.GetTitles();
+  }
 
   @Post()
   async createMovie(@Body() createMovieDto: CreateMovieDto) {

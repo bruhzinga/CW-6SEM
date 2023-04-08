@@ -88,9 +88,11 @@ export class MoviesService {
       select: {
         People: {
           select: {
+            id: true,
             Role: true,
             People: {
               select: {
+                id: true,
                 name: true,
                 Image: {
                   select: {
@@ -120,6 +122,15 @@ export class MoviesService {
             },
           },
         },
+      },
+    });
+  }
+
+  GetTitles() {
+    return this.prisma.movie.findMany({
+      select: {
+        title: true,
+        id: true,
       },
     });
   }

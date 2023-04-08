@@ -58,13 +58,14 @@ model Movie {
 }
 
 model PeopleOnMovies {
+  id       Int    @id @default(autoincrement())
   movieId  Int
   peopleId Int
   Role     String
   Movie    Movie  @relation(fields: [movieId], references: [id])
   People   People @relation(fields: [peopleId], references: [id])
 
-  @@id([movieId, peopleId, Role])
+  @@unique([movieId, peopleId, Role])
 }
 
 model Favorite {
