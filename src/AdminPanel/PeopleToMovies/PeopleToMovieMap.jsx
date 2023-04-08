@@ -120,15 +120,17 @@ const PeopleToMovieMap = () => {
                             value={selectedActor}
                             renderInput={(params) => <TextField {...params} label="Actor" />}
                         />
-                        <TextField
-                            label="Role"
-                            value={role}
-                            onChange={handleRoleChange}
-                            sx={{ marginTop: "10px", marginBottom: "10px" }}
-                        />
-                        <Button variant="contained" onClick={handleAddMapping} disabled={!selectedActor || !role}>
-                            Add Mapping
-                        </Button>
+                            <TextField
+                                label="Role"
+                                value={role}
+                                onChange={handleRoleChange}
+                                sx={{ marginTop: "10px", marginBottom: "10px" }}
+                            />
+                            <div>
+                                <Button variant="contained" onClick={handleAddMapping} disabled={!selectedActor || !role}>
+                                    Add Mapping
+                                </Button>
+                            </div>
                     </>
                 )}
             </Box>

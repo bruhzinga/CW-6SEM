@@ -17,6 +17,7 @@ import GenresAdminPanel from "@/AdminPanel/Genres/GenresAdminPanel";
 import ImageAdminPanel from "@/AdminPanel/Images/ImageAdminPanel";
 import PeopleAdminPanel from "@/AdminPanel/People/PeopleAdminPanel";
 import PeopleToMovieMap from "@/AdminPanel/PeopleToMovies/PeopleToMovieMap";
+import VideoAdminPanel from "@/AdminPanel/Videos/VideoAdminPanel";
 
 export { App };
 
@@ -46,6 +47,7 @@ function App() {
                     <Route path='/admin/image' element={<ImageAdminPanel/>} />
                     <Route path='/admin/people' element={<PeopleAdminPanel/>} />
                     <Route path='/admin/people-map' element={<PeopleToMovieMap/>} />
+                    <Route path='/admin/video' element={<VideoAdminPanel/>} />
 
                 </Route>
                     <Route path="/login" element={<Login />} />
