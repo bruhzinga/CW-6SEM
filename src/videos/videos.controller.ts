@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -46,20 +47,27 @@ export class VideosController {
     @Body() body: { type: Type },
   ) {
     const { type } = body;
-    await this.prisma.$transaction(async () => {
+    return await this.prisma.$transaction(async () => {
       let filenameFormatted = file.originalname.replace(/ /g, '_');
       filenameFormatted = filenameFormatted.replace(/#/g, '_');
-      await this.videosService.create({
+      const result = await this.videosService.create({
         filename: filenameFormatted,
         type: type || Type.Movie,
       });
-      const stream = fs.createWriteStream(
-        `FileStorage/Videos/${filenameFormatted}`,
-      );
-      stream.write(file.buffer);
-    });
+      try {
+        const stream = fs.createWriteStream(
+          `FileStorage/Videos/${filenameFormatted}`,
+        );
+        stream.write(file.buffer);
+      } catch (e) {
+        throw new HttpException(
+          'Error creating file',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
 
-    return 'File uploaded successfully!';
+      return result;
+    });
   }
 
   @Redirect('http://localhost/stream/videos/')
@@ -75,7 +83,25 @@ export class VideosController {
     return this.videosService.findAll();
   }
 
-  @Patch(':id')
+  @Delete(':id')
+  async deleteVideoAndUnlink(@Param('id') id: string) {
+    const videoData = await this.videosService.findOne(+id);
+    if (videoData) {
+      await this.videosService.remove(+id);
+      fs.unlink(`FileStorage/Videos/${videoData.filename}`, (err) => {
+        if (err) {
+          throw new HttpException(
+            'Error deleting file',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+      });
+    } else {
+      throw new HttpException('Video not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  /* @Patch(':id')
   @UseInterceptors(FileInterceptor('file'))
   async updateVideo(
     @Param('id') id: string,
@@ -93,5 +119,5 @@ export class VideosController {
     );
     stream.write(file.buffer);
     return 'File updated successfully!';
-  }
+  }*/
 }

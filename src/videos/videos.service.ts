@@ -32,4 +32,15 @@ export class VideosService {
       data,
     });
   }
+
+  async remove(videoId: number) {
+    const video = await this.prisma.video.findUnique({
+      where: { id: videoId },
+    });
+    if (!video)
+      throw new HttpException('Video not found', HttpStatus.NOT_FOUND);
+    return this.prisma.video.delete({
+      where: { id: videoId },
+    });
+  }
 }
