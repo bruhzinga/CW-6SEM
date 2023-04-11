@@ -18,6 +18,7 @@ import ImageAdminPanel from "@/AdminPanel/Images/ImageAdminPanel";
 import PeopleAdminPanel from "@/AdminPanel/People/PeopleAdminPanel";
 import PeopleToMovieMap from "@/AdminPanel/PeopleToMovies/PeopleToMovieMap";
 import VideoAdminPanel from "@/AdminPanel/Videos/VideoAdminPanel";
+import MovieAdminPanel from "@/AdminPanel/Movie/MovieAdminPanel";
 
 export { App };
 
@@ -48,6 +49,7 @@ function App() {
                     <Route path='/admin/people' element={<PeopleAdminPanel/>} />
                     <Route path='/admin/people-map' element={<PeopleToMovieMap/>} />
                     <Route path='/admin/video' element={<VideoAdminPanel/>} />
+                    <Route path='/admin/movie' element={<MovieAdminPanel/>} />
 
                 </Route>
                     <Route path="/login" element={<Login />} />
