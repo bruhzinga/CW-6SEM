@@ -16,6 +16,10 @@ export class CreateMovieDto {
 
   @IsString()
   @IsNotEmpty()
+  country: string;
+
+  @IsString()
+  @IsNotEmpty()
   description: string;
 
   @IsDate()

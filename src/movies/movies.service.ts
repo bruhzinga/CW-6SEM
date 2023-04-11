@@ -44,6 +44,7 @@ export class MoviesService {
       include: {
         Genre: {
           select: {
+            id: true,
             name: true,
           },
         },
@@ -51,11 +52,13 @@ export class MoviesService {
           select: {
             id: true,
             type: true,
+            filename: true,
           },
         },
         Image: {
           select: {
             id: true,
+            filename: true,
           },
         },
         People: true,
@@ -131,6 +134,37 @@ export class MoviesService {
       select: {
         title: true,
         id: true,
+      },
+    });
+  }
+
+  UpdateMovie(MovieID: number, createMovieDto: CreateMovieDto) {
+    return this.prisma.movie.update({
+      where: {
+        id: MovieID,
+      },
+      data: {
+        title: createMovieDto.title,
+        description: createMovieDto.description,
+        releaseDate: new Date(createMovieDto.releaseDate),
+        duration: createMovieDto.duration,
+        Genre: {
+          set:
+            createMovieDto.genre.map((genre) => ({ id: genre })) || undefined,
+        },
+        Video: {
+          set:
+            createMovieDto.video.map((video) => ({ id: video })) || undefined,
+        },
+        Image: {
+          set:
+            createMovieDto.image.map((image) => ({ id: image })) || undefined,
+        },
+        mainPoster: {
+          connect: {
+            id: createMovieDto.mainPoster,
+          },
+        },
       },
     });
   }

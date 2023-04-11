@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
@@ -56,5 +57,10 @@ export class MoviesController {
   @Get(':id/comments')
   async GetComments(@Param('id') id: string) {
     return this.moviesService.GetComments(+id);
+  }
+
+  @Put(':id')
+  async UpdateMovie(@Param('id') id: string, @Body() movie: CreateMovieDto) {
+    return this.moviesService.UpdateMovie(+id, movie);
   }
 }
