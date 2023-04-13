@@ -19,6 +19,7 @@ import PeopleAdminPanel from "@/AdminPanel/People/PeopleAdminPanel";
 import PeopleToMovieMap from "@/AdminPanel/PeopleToMovies/PeopleToMovieMap";
 import VideoAdminPanel from "@/AdminPanel/Videos/VideoAdminPanel";
 import MovieAdminPanel from "@/AdminPanel/Movie/MovieAdminPanel";
+import SearchPage from "@/search/SearchPage";
 
 export { App };
 
@@ -43,6 +44,7 @@ function App() {
                     <Route path="/favourites" element={<Favourites/>} />
                     <Route path="/watch-later" element={<WatchLater/>} />
                     <Route path="/history" element={<History/>} />
+                    <Route path="/search" element={<SearchPage/>} />
                     <Route path="/movie/:id" element={<Movie/>} />
                     <Route path='/admin/genre' element={<GenresAdminPanel/>} />
                     <Route path='/admin/image' element={<ImageAdminPanel/>} />

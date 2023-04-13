@@ -11,7 +11,7 @@ import {
     AdminPanelSettings,
     ImageOutlined,
     Movie, PeopleAltRounded,
-    PeopleOutlined, PeopleTwoTone,
+    PeopleOutlined, PeopleTwoTone, SearchSharp,
     VideoFileOutlined,
     WatchLater
 } from "@mui/icons-material";
@@ -31,7 +31,8 @@ const items = [
     getItem( 'Main', '/', <PlaySquareOutlined style={{ fontSize: "24px" }} />),
     getItem('Watch later', '/watch-later', <WatchLater style={{ fontSize: "26px" }} />),
     getItem('Favourites', '/favourites', <HeartFilled style={{ fontSize: "24px" }} />),
-    getItem('History', '/history', <HistoryOutlined style={{ fontSize: "24px" }} />)
+    getItem('History', '/history', <HistoryOutlined style={{ fontSize: "24px" }} />),
+    getItem('Search', '/search', <SearchSharp style={{ fontSize: "24px" }} />)
 ];
 
 const AdminItems = [

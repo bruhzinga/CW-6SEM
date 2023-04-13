@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Card, CardMedia, Chip, Grid, styled, Typography} from '@mui/material';
+import {Card, CardMedia, Chip, Grid, IconButton, styled, Typography} from '@mui/material';
 import {useParams} from 'react-router-dom';
 import fetchWrapper from "@/_helpers/fetch-wrapper";
+import {Favorite, WatchLater} from "@mui/icons-material";
 
 
 const Root = styled('div')({
@@ -49,14 +50,29 @@ const GetMovieHeaderObject = (movieData) => {
         runtime: convertMinutesToHourStringWithMinutes(movieData?.duration),
         posterPath: `${import.meta.env.VITE_API_URL}/images/${movieData?.mainPosterId}`,
         genres: movieData?.Genre.map((genre) => genre.name),
-        country: movieData?.Country || 'N/A',
+        country: movieData?.country || 'N/A',
         trailerUrl: `${import.meta.env.VITE_API_URL}/videos/${
-            movieData?.Video.filter((video) => video.type === 'Trailer')[0]?.id
+            movieData?.Video.filter((video) => video.type === 'trailer')[0]?.id
         }`,
     };
 };
 
 const MovieHeader = () => {
+    const [isInFavorites, setIsInFavorites] = useState(false);
+    const [isInWatchLater, setIsInWatchLater] = useState(false);
+
+
+
+
+
+
+    const handleAddToFavorites = () => {
+        setIsInFavorites(!isInFavorites);
+    };
+
+    const handleAddToWatchLater = () => {
+        setIsInWatchLater(!isInWatchLater);
+    };
     const { id } = useParams();
     const [movieData, setMovieData] = useState(null);
 
@@ -82,11 +98,23 @@ const MovieHeader = () => {
 
     return (
         <Root>
-            <Typography variant="h3" gutterBottom>
-                {title}
-            </Typography>
+            <Grid container alignItems="center" justifyContent="space-between" sx={{mb:2}}>
+                <Grid item>
+                    <Typography variant="h3" gutterBottom>
+                        {title}
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <IconButton   onClick={handleAddToFavorites} >
+                        <Favorite fontSize="large" color={isInFavorites ? 'error' : 'disabled'} />
+                    </IconButton>
+                    <IconButton onClick={handleAddToWatchLater}>
+                        <WatchLater  fontSize="large" color={isInWatchLater ? 'primary' : 'disabled'} />
+                    </IconButton>
+                </Grid>
+            </Grid>
             <Typography variant="h6" gutterBottom>
-                {rating} / 10
+                {rating === 'N/A' ? 'N/A' : `${rating} / 10`}
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
@@ -126,6 +154,7 @@ const MovieHeader = () => {
                 >
                     {description}
                 </Typography>
+
             </div>
         </Root>
     );

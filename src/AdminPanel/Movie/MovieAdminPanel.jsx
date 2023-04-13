@@ -128,13 +128,12 @@ const MovieAdminPanel = () => {
 
     const handleMovieSelect = async (event, value) => {
         setSelectedMovie(value);
-        /*setFormData(value);*/
         const data = await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/${value.id}`);
         const formattedData = {
             title: data.title,
-            country: data.Country? data.Country : '',
+            country: data.country ? data.country : '',
             description: data.description,
-            releaseDate: new Date(data.releaseDate).toLocaleDateString(),
+            releaseDate: `${new Date(data.releaseDate).getFullYear()}-${new Date(data.releaseDate).getMonth() + 1}-${new Date(data.releaseDate).getDate()}`,
             duration: data.duration,
             genreIds: data.Genre.map((genre) => {return {id: genre.id, name: genre.name}}),
             videoIds: data.Video.map((video) => {return {id: video.id, name: video.filename}}),
@@ -142,6 +141,7 @@ const MovieAdminPanel = () => {
             posterId: data.mainPosterId
 
         }
+        console.log('FORMATTED DATA', formattedData)
         setFormData(formattedData);
     };
 
@@ -149,6 +149,7 @@ const MovieAdminPanel = () => {
         event.preventDefault();
         const formattedData = {
             title: formData.title,
+            country: formData.country,
             description: formData.description,
             releaseDate: formData.releaseDate,
             duration: +formData.duration,
@@ -169,6 +170,7 @@ const MovieAdminPanel = () => {
                     videoIds: [],
                     imageIds: [],
                     posterId: '',
+                    country: ''
                 });
                 setSelectedMovie(null);
                 const updatedMovies = [...movies];
@@ -186,7 +188,7 @@ const MovieAdminPanel = () => {
     const handleAdd = async (event) => {
         event.preventDefault();
         const formattedData = {
-            country: formData.Country,
+            country: formData.country,
             title: formData.title,
             description: formData.description,
             releaseDate: formData.releaseDate,
@@ -208,6 +210,7 @@ const MovieAdminPanel = () => {
                     videoIds: [],
                     imageIds: [],
                     posterId: '',
+                    country: ''
                 });
                 setSelectedMovie(null);
                 const updatedMovies = [...movies];
@@ -221,12 +224,12 @@ const MovieAdminPanel = () => {
         });
     };
 
-    const handleDelete = async (event, id) => {
+    const handleDelete = async (event) => {
         event.preventDefault();
-        const data = await fetchWrapper.delete(`${import.meta.env.VITE_API_URL}/movies/${id}`)
+        const data = await fetchWrapper.delete(`${import.meta.env.VITE_API_URL}/movies/${selectedMovie.id}`)
             .then((data) => {
                 const updatedMovies = [...movies];
-                const index = updatedMovies.findIndex((movie) => movie.id === id);
+                const index = updatedMovies.findIndex((movie) => movie.id === selectedMovie.id);
                 updatedMovies.splice(index, 1);
                 setMovies(updatedMovies);
             });
@@ -276,7 +279,7 @@ return (
             <StyledInput
                 label="Release Date"
                 name="releaseDate"
-                value={formData.releaseDate? new Date(formData.releaseDate).toISOString().slice(0, 10) : ''}
+                value={formData.releaseDate}
                 onChange={handleInputChange}
                 variant="outlined"
                 type="date"
