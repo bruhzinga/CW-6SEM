@@ -45,7 +45,7 @@ model Movie {
   duration      Int
   numberOfViews Int              @default(0)
   rating        Int?
-  Country       String?
+  country       String?
   Genre         Genre[]
   Video         Video[]
   Image         Image[]
@@ -62,7 +62,7 @@ model PeopleOnMovies {
   movieId  Int
   peopleId Int
   Role     String
-  Movie    Movie  @relation(fields: [movieId], references: [id])
+  Movie    Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
   People   People @relation(fields: [peopleId], references: [id])
 
   @@unique([movieId, peopleId, Role])
@@ -71,8 +71,8 @@ model PeopleOnMovies {
 model Favorite {
   userId  String
   movieId Int
-  User    User   @relation(fields: [userId], references: [id])
-  Movie   Movie  @relation(fields: [movieId], references: [id])
+  User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
 
   @@id([userId, movieId])
 }
@@ -82,8 +82,8 @@ model History {
   movieId  Int
   time     DateTime @default(now())
   progress Float    @default(0)
-  User     User     @relation(fields: [userId], references: [id])
-  Movie    Movie    @relation(fields: [movieId], references: [id])
+  User     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Movie    Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
 
   @@id([userId, movieId, time])
 }
@@ -95,8 +95,8 @@ model Comment {
   createdOn DateTime @default(now())
   userId    String
   movieId   Int
-  User      User     @relation(fields: [userId], references: [id])
-  Movie     Movie    @relation(fields: [movieId], references: [id])
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
 
   @@unique([userId, movieId])
 }

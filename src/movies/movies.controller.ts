@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -62,5 +63,10 @@ export class MoviesController {
   @Put(':id')
   async UpdateMovie(@Param('id') id: string, @Body() movie: CreateMovieDto) {
     return this.moviesService.UpdateMovie(+id, movie);
+  }
+
+  @Delete(':id')
+  async DeleteMovie(@Param('id') id: string) {
+    return this.moviesService.DeleteMovie(+id);
   }
 }

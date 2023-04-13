@@ -15,6 +15,7 @@ export class MoviesService {
         description: createMovieDto.description,
         releaseDate: new Date(createMovieDto.releaseDate),
         duration: createMovieDto.duration,
+        country:createMovieDto.country,
         Genre: {
           connect:
             createMovieDto.genre.map((genre) => ({ id: genre })) || undefined,
@@ -144,6 +145,7 @@ export class MoviesService {
         id: MovieID,
       },
       data: {
+        country: createMovieDto.country,
         title: createMovieDto.title,
         description: createMovieDto.description,
         releaseDate: new Date(createMovieDto.releaseDate),
@@ -165,6 +167,14 @@ export class MoviesService {
             id: createMovieDto.mainPoster,
           },
         },
+      },
+    });
+  }
+
+  DeleteMovie(id: number) {
+    return this.prisma.movie.delete({
+      where: {
+        id: id,
       },
     });
   }
