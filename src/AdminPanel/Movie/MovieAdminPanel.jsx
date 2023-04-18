@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Autocomplete, Button, TextField} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import fetchWrapper from "@/_helpers/fetch-wrapper";
+import axios from "axios";
 
 const StyledForm = styled('form')({
     display: 'flex',
@@ -34,6 +35,7 @@ const MovieAdminPanel = () => {
         imageIds: [],
         posterId: '',
     });
+    const [countries, setCountries] = useState([]);
     const [genres, setGenres] = useState([]);
     const [videos, setVideos] = useState([]);
     const [images, setImages] = useState([]);
@@ -79,7 +81,12 @@ const MovieAdminPanel = () => {
 
 
 
-
+        const fetchCountries = async () => {
+            const response = await axios.get(
+                "https://restcountries.com/v3.1/all?fields=name"
+            );
+            setCountries(response.data.map((country) => country.name.common));
+        };
 
 
     useEffect(() => {
@@ -87,6 +94,7 @@ const MovieAdminPanel = () => {
         fetchGenres();
         fetchVideos()
         fetchImages();
+        fetchCountries();
     }, []);
 
     const handleInputChange = (event) => {
@@ -269,13 +277,21 @@ return (
                 multiline
                 rows={4}
             />
-            <StyledInput
-            label="Country"
-            name="country"
-            value={formData.country}
-            onChange={handleInputChange}
-            variant="outlined"
-        />
+            <Autocomplete style={{width: '100%'}}
+                id='country-select'
+                disablePortal
+                value={formData.country || null}
+                onChange={(event, value) => setFormData((prevFormData) => {
+                    return {...prevFormData, country: value}
+                })
+                }
+                options={countries}
+                renderInput={(params) => (
+                    <TextField {...params} label="Country" variant="outlined" />
+                )}
+            >
+            </Autocomplete>
+
             <StyledInput
                 label="Release Date"
                 name="releaseDate"

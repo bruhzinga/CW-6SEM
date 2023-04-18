@@ -3,6 +3,7 @@ import {MainCarousel} from "@/_components/MainCarousel";
 import MovieGallery from "../_components/MovieGallery";
 import {fetchWrapper} from "@/_helpers/fetch-wrapper";
 
+
 const fetchGenres = async () => {
     return await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/genres`);
 };
