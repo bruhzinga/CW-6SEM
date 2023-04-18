@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMovieDto } from './DTO/Create-movie-dto';
 import { Movie, Prisma } from '@prisma/client';
-import { retry } from 'rxjs';
+import { switchMapTo } from 'rxjs';
 
 @Injectable()
 export class MoviesService {
@@ -15,7 +15,7 @@ export class MoviesService {
         description: createMovieDto.description,
         releaseDate: new Date(createMovieDto.releaseDate),
         duration: createMovieDto.duration,
-        country:createMovieDto.country,
+        country: createMovieDto.country,
         Genre: {
           connect:
             createMovieDto.genre.map((genre) => ({ id: genre })) || undefined,
@@ -176,6 +176,106 @@ export class MoviesService {
       where: {
         id: id,
       },
+    });
+  }
+
+  SearchMovies(
+    genre: string,
+    title: string,
+    years: number,
+    country: string,
+    page: number,
+    rating: number,
+    sort: string,
+  ) {
+    const take = 20;
+    const skip = page * take;
+    const genresArray = genre === '' ? [] : genre.split(',').map(Number);
+    const titleFilter = title
+      ? {
+          title: {
+            contains: title,
+          },
+        }
+      : {};
+    const dateFilter = years
+      ? {
+          releaseDate: {
+            gte: new Date(years, 0, 1),
+            lte: new Date(years, 11, 31),
+          },
+        }
+      : {};
+
+    const countryFilter = country
+      ? {
+          country: {
+            contains: country,
+          },
+        }
+      : {};
+
+    const genreFilter =
+      genresArray.length > 0
+        ? {
+            AND: genresArray.map((genre) => ({
+              Genre: {
+                some: {
+                  id: genre,
+                },
+              },
+            })),
+          }
+        : {};
+
+    const ratingFilter = rating
+      ? {
+          rating: {
+            gte: rating,
+          },
+        }
+      : {};
+
+    let sortFilter = {};
+    switch (sort) {
+      case 'rating':
+        sortFilter = {
+          rating: 'desc',
+        };
+        break;
+      case 'year':
+        sortFilter = {
+          releaseDate: 'desc',
+        };
+        break;
+      case 'latest':
+        sortFilter = {
+          id: 'desc',
+        };
+        break;
+      default:
+        sortFilter = {
+          id: 'desc',
+        };
+    }
+
+    return this.prisma.movie.findMany({
+      where: {
+        AND: [
+          titleFilter,
+          dateFilter,
+          countryFilter,
+          genreFilter,
+          ratingFilter,
+        ],
+      },
+      include: {
+        Image: true,
+        Genre: true,
+      },
+      skip: skip,
+      take: take,
+      orderBy: sortFilter,
     });
   }
 }
