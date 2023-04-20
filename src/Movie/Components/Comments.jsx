@@ -1,27 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Button, Card, Divider, Input, Typography } from "@mui/material";
+import React, { useState, useEffect, useRef } from "react";
+import {
+    Button,
+    Card,
+    Divider,
+    Input,
+    Typography,
+} from "@mui/material";
 import { CommentOutlined } from "@mui/icons-material";
-import fetchWrapper from "@/_helpers/fetch-wrapper";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { io } from "socket.io-client";
 
 const FilmComments = () => {
-    const { user: authUser } = useSelector(x => x.auth);
+    const { user: authUser } = useSelector((x) => x.auth);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
     const [newRating, setNewRating] = useState(0);
     const [deleteWarning, setDeleteWarning] = useState(null);
     const { id } = useParams();
+    const socketRef = useRef(null);
 
     useEffect(() => {
-        fetchComments();
-    }, []);
+        socketRef.current = io(import.meta.env.VITE_API_URL, { transports: ["websocket"] });
 
-    const fetchComments = async () => {
-        try {
-            const data = await fetchWrapper.get(
-                `${import.meta.env.VITE_API_URL}/movies/${id}/comments`
-            );
+        // Send a request for the current comments when the component mounts
+        socketRef.current.emit("comments:get", id);
+
+        // Listen for incoming comments and update the state when they arrive
+        socketRef.current.on("comments:received", (data) => {
             const formattedData = data.Comment.map((entry) => ({
                 id: entry.id,
                 user: entry.User.username,
@@ -30,10 +36,38 @@ const FilmComments = () => {
                 date: new Date(entry.createdOn).toLocaleString(),
             }));
             setComments(formattedData);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+        });
+
+
+
+        socketRef.current.on('comment:error',() =>{
+            setDeleteWarning("You have already reviewed this movie")
+        });
+
+        socketRef.current.on('comment:added',(comment) =>{
+            console.log('success',comment)
+            setComments((prevComments) => [
+                ...prevComments,
+                {
+                    id: comment.id,
+                    user: comment.User.username,
+                    review: comment.content,
+                    rating: comment.rating,
+                    date: new Date(comment.createdOn).toLocaleString(),
+                },
+            ]);
+        });
+
+
+       socketRef.current.on('comment:deleted',(commentId) =>{
+           console.log('deleted',commentId)
+           setComments((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
+         });
+
+        return () => {
+            socketRef.current.disconnect();
+        };
+    }, [id]);
 
     const handleCommentChange = (event) => {
         setNewComment(event.target.value);
@@ -43,39 +77,33 @@ const FilmComments = () => {
         setNewRating(event.target.value);
     };
 
-    const handleCommentSubmit = async () => {
-        try {
-            const comment = {
-                content: newComment,
-                rating: +newRating,
-                movieId: +id,
-            };
-            await fetchWrapper.post(
-                `${import.meta.env.VITE_API_URL}/comments`,
-                comment
-            );
-            setNewComment("");
-            setNewRating(0);
-            setDeleteWarning(null);
-            fetchComments();
-        } catch (error) {
-            setDeleteWarning("You already posted a review. Please delete the previous review.");
-        }
+    const handleCommentSubmit = () => {
+        const comment = {
+            content: newComment,
+            rating: +newRating,
+            movieId: +id,
+        };
+        const data = {comment,username:authUser.username}
+        socketRef.current.emit("comments:add", data);
+        setNewComment("");
+        setNewRating(0);
     };
 
-    const handleCommentDelete = async (commentId) => {
-        try {
-            await fetchWrapper.delete(
-                `${import.meta.env.VITE_API_URL}/comments/${commentId}`
-            );
-            fetchComments();
-        } catch (error) {
-            console.log(error);
-        }
+    const handleCommentDelete = (commentId) => {
+        const data = {commentId:commentId,username:authUser.username};
+        socketRef.current.emit("comments:delete", data);
+
+
     };
 
     return (
-        <div style={{ marginTop: "30px", marginRight: "10vh", marginLeft: "10vh" }}>
+        <div
+            style={{
+                marginTop: "30px",
+                marginRight: "10vh",
+                marginLeft: "10vh",
+            }}
+        >
             <Card sx={{ p: 2, mb: 4 }}>
                 <Typography variant="h5" sx={{ mb: 2 }}>
                     Leave a Comment
@@ -97,11 +125,16 @@ const FilmComments = () => {
                 <Divider sx={{ my: 2 }} />
                 <Typography variant="subtitle1">Rating (0-10)</Typography>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                       <Input type="number" value={newRating} onChange={handleRatingChange} sx={{ mr: 2 }} />
+                    <Input
+                        type="number"
+                        value={newRating}
+                        onChange={handleRatingChange}
+                        sx={{ mr: 2 }}
+                    />
                     <Button
                         variant="contained"
                         onClick={handleCommentSubmit}
-                        disabled={newComment.length === 0 || newRating < 0 || newRating > 10}
+                        disabled={!authUser}
                     >
                         Submit
                     </Button>
@@ -109,7 +142,7 @@ const FilmComments = () => {
             </Card>
             {comments.map((comment) => (
                 <Card sx={{ p: 2, mb: 4 }} key={comment.id}>
-                    <Typography variant="h5" sx={{ mb: 2 }}>
+                    <Typography variant="h6" sx={{ mb: 2 }}>
                         {comment.user}
                     </Typography>
                     <Typography variant="subtitle1" sx={{ mb: 2 }}>
@@ -121,10 +154,10 @@ const FilmComments = () => {
                     <Typography variant="subtitle1" sx={{ mb: 2 }}>
                         Rating: {comment.rating}
                     </Typography>
-                    {authUser.username === comment.user && (
+                    {authUser && authUser.username === comment.user && (
                         <Button
                             variant="contained"
-    onClick={() => handleCommentDelete(comment.id)}
+                            onClick={() => handleCommentDelete(comment.id)}
                         >
                             Delete
                         </Button>
