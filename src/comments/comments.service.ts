@@ -46,6 +46,9 @@ export class CommentsService {
           },
         },
       },
+      include: {
+        User: true,
+      },
     });
     if (result) {
       await this.UpdateRating(CreateCommentDTO);

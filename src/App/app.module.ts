@@ -12,6 +12,7 @@ import { CommentsModule } from '../comments/comments.module';
 import { FavouritesModule } from '../favourites/favourites.module';
 import { HistoryService } from '../history/history.service';
 import { HistoryModule } from '../history/history.module';
+import { MovieCommentsModule } from '../movie-comments/movie-comments.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { HistoryModule } from '../history/history.module';
     CommentsModule,
     FavouritesModule,
     HistoryModule,
+    MovieCommentsModule,
     ConfigModule.forRoot(),
   ],
 })
