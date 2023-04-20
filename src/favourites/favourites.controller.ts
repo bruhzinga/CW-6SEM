@@ -1,6 +1,7 @@
 import {
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Req,
@@ -14,14 +15,17 @@ export class FavouritesController {
   constructor(private readonly favouritesService: FavouritesService) {}
 
   @Post(':movieId')
-  @UseGuards(AuthGuard('jwt'))
   async createFavourite(@Req() req, @Param('movieId') movieId: string) {
     return this.favouritesService.createFavourite(+movieId, req.user.id);
   }
 
   @Delete(':movieId')
-  @UseGuards(AuthGuard('jwt'))
   async deleteFavourite(@Req() req, @Param('movieId') movieId: string) {
     return this.favouritesService.deleteFavourite(+movieId, req.user.id);
+  }
+
+  @Get()
+  async getFavourites(@Req() req) {
+    return this.favouritesService.getFavourites(req.user.id);
   }
 }

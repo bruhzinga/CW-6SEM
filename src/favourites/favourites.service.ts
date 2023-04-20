@@ -32,4 +32,15 @@ export class FavouritesService {
       },
     });
   }
+
+  getFavourites(id: string) {
+    return this.prisma.favorite.findMany({
+      where: {
+        userId: id,
+      },
+      include: {
+        Movie: true,
+      },
+    });
+  }
 }

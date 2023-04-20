@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Redirect,
@@ -73,7 +74,7 @@ export class VideosController {
   @Redirect('http://localhost/stream/videos/')
   @Get(':id')
   @Public()
-  async getStreamVideo(@Param('id') id: string) {
+  async getStreamVideo(@Param('id', ParseIntPipe) id: number) {
     const videoData = await this.videosService.findOne(+id);
     return { url: `http://localhost/videos/${videoData.filename}` };
   }
