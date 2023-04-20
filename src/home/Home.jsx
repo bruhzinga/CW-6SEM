@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {HeartFilled, HistoryOutlined, PlaySquareOutlined, TagOutlined} from '@ant-design/icons';
 import {Button, Layout, Menu} from 'antd';
 import {authActions} from "@/_store";
-import {Favourites} from "@/Favourites/Favourites";
 import {Main} from "@/Main/Main";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {

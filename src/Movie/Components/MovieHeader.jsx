@@ -52,22 +52,36 @@ const GetMovieHeaderObject = (movieData) => {
         genres: movieData?.Genre.map((genre) => genre.name),
         country: movieData?.country || 'N/A',
         trailerUrl: `${import.meta.env.VITE_API_URL}/videos/${
-            movieData?.Video.filter((video) => video.type === 'trailer')[0]?.id
+            movieData?.Video.filter((video) => video.type === 'trailer')[0]? movieData?.Video.filter((video) => video.type === 'trailer')[0].id : 1
         }`,
     };
 };
+
+
 
 const MovieHeader = () => {
     const [isInFavorites, setIsInFavorites] = useState(false);
     const [isInWatchLater, setIsInWatchLater] = useState(false);
 
 
+    const fetchFavorites = async () => {
+        const data =  await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/favourites`);
+        if(data.filter(movie => movie.movieId === +id).length > 0) {
+            setIsInFavorites(true);
+        }
+    }
 
 
 
 
-    const handleAddToFavorites = () => {
+
+    const handleAddToFavorites =  async () => {
         setIsInFavorites(!isInFavorites);
+        if (isInFavorites) {
+            await fetchWrapper.delete(`${import.meta.env.VITE_API_URL}/favourites/${id}`);
+        } else {
+            await   fetchWrapper.post(`${import.meta.env.VITE_API_URL}/favourites/${id}`);
+        }
     };
 
     const handleAddToWatchLater = () => {
@@ -82,6 +96,7 @@ const MovieHeader = () => {
             setMovieData(data);
         };
         fetchData();
+        fetchFavorites();
     }, [id]);
 
     const FetchMovieData = async (id) => {

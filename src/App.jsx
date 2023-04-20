@@ -5,7 +5,6 @@ import {history} from './_helpers/history';
 
 import {Register} from "./register/Register";
 import {Main} from "./Main/Main";
-import {Favourites} from "./Favourites/Favourites";
 import History from "./History/History";
 import WatchLater from "./WatchLater/WatchLater";
 import Movie from "./Movie/Movie";
@@ -20,6 +19,7 @@ import PeopleToMovieMap from "@/AdminPanel/PeopleToMovies/PeopleToMovieMap";
 import VideoAdminPanel from "@/AdminPanel/Videos/VideoAdminPanel";
 import MovieAdminPanel from "@/AdminPanel/Movie/MovieAdminPanel";
 import SearchPage from "@/search/SearchPage";
+import Favourites from "@/Favourites/Favourites";
 
 export { App };
 

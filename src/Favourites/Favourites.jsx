@@ -1,11 +1,39 @@
+import React, { useState, useEffect } from "react";
+import { Box, Paper, Typography } from "@mui/material";
+import { Link } from "react-router-dom"; // Import Link component
+import fetchWrapper from "@/_helpers/fetch-wrapper";
 
+const Favourites = () => {
+    const [favouritesData, setFavouritesData] = useState([]);
 
-export { Favourites };
+    useEffect(() => {
+        fetchWrapper
+            .get(`${import.meta.env.VITE_API_URL}/favourites`)
+            .then((response) => {
+                let formattedData = response.map((item) => {
+                    return {
+                        movieName: item.Movie.title,
+                        id: item.Movie.id,
+                    };
+                });
+                setFavouritesData(formattedData);
+            });
+    }, []);
 
-function Favourites() {
-   return (
-         <div>
-            <h1>Favourites</h1>
-            </div>
+    return (
+        <Box sx={{ padding: 2 }}>
+            <Typography variant="h6">Favourites</Typography>
+            {favouritesData.map((item,index) => (
+                <Link key={index} to={`/movie/${item.id}`}> {/* Wrap Paper with Link */}
+                    <Paper sx={{ padding: 1, marginTop: 2 }} >
+                        <Typography variant="body1">
+                            <strong>Movie:</strong> {item.movieName}
+                        </Typography>
+                    </Paper>
+                </Link>
+            ))}
+        </Box>
     );
-}
+};
+
+export default Favourites;
