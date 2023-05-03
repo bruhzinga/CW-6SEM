@@ -141,7 +141,7 @@ const MovieAdminPanel = () => {
             title: data.title,
             country: data.country ? data.country : '',
             description: data.description,
-            releaseDate: `${new Date(data.releaseDate).getFullYear()}-${new Date(data.releaseDate).getMonth() + 1}-${new Date(data.releaseDate).getDate()}`,
+            releaseDate: new Date(data.releaseDate).toISOString().split('T')[0],
             duration: data.duration,
             genreIds: data.Genre.map((genre) => {return {id: genre.id, name: genre.name}}),
             videoIds: data.Video.map((video) => {return {id: video.id, name: video.filename}}),
