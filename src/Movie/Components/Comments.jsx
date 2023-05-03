@@ -17,6 +17,7 @@ const FilmComments = () => {
     const [newComment, setNewComment] = useState("");
     const [newRating, setNewRating] = useState(0);
     const [deleteWarning, setDeleteWarning] = useState(null);
+    const [buttonDisable, setButtonDisable] = useState(true);
     const { id } = useParams();
     const socketRef = useRef(null);
 
@@ -41,7 +42,7 @@ const FilmComments = () => {
 
 
         socketRef.current.on('comment:error',() =>{
-            setDeleteWarning("You have already reviewed this movie")
+            setButtonDisable("You have already reviewed this movie")
         });
 
         socketRef.current.on('comment:added',(comment) =>{
@@ -74,7 +75,14 @@ const FilmComments = () => {
     };
 
     const handleRatingChange = (event) => {
-        setNewRating(event.target.value);
+        const value = event.target.value;
+        if(value < 0 || value > 10){
+            setButtonDisable(true);
+        }
+        else {
+            setNewRating(event.target.value);
+            setButtonDisable(false);
+        }
     };
 
     const handleCommentSubmit = () => {
@@ -108,9 +116,9 @@ const FilmComments = () => {
                 <Typography variant="h5" sx={{ mb: 2 }}>
                     Leave a Comment
                 </Typography>
-                {deleteWarning && (
+                {buttonDisable && (
                     <Typography variant="subtitle1" color="error">
-                        {deleteWarning}
+                        {buttonDisable}
                     </Typography>
                 )}
                 <Input
@@ -134,7 +142,7 @@ const FilmComments = () => {
                     <Button
                         variant="contained"
                         onClick={handleCommentSubmit}
-                        disabled={!authUser}
+                        disabled={buttonDisable}
                     >
                         Submit
                     </Button>
@@ -148,7 +156,7 @@ const FilmComments = () => {
                     <Typography variant="subtitle1" sx={{ mb: 2 }}>
                         {comment.date}
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 2 }}>
+                    <Typography variant="body1" sx={{ mb: 2 ,wordWrap: 'break-word'}}>
                         {comment.review}
                     </Typography>
                     <Typography variant="subtitle1" sx={{ mb: 2 }}>
