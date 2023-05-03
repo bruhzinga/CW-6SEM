@@ -19,7 +19,7 @@ import { RolesGuard } from './roles.guard';
 import { HasRoles } from './has-roles.decorator';
 import { UserDto } from '../users/dto/user.dto';
 import { Role } from '../users/entities/Role';
-import {Public} from "./public-decorator";
+import { Public } from './public-decorator';
 
 @Controller('auth')
 export class AuthController {
