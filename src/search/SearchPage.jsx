@@ -247,8 +247,7 @@ const SearchPage = () => {
             </Grid>
 
             <Grid container justifyContent="space-between" style={{ marginTop: "1rem" }}>
-                <Grid item>
-                    <FormControl fullWidth variant="outlined">
+                <Grid item >
                         <InputLabel>Sort by</InputLabel>
                         <Select
                             value={selectedSort}
@@ -260,7 +259,6 @@ const SearchPage = () => {
                             <MenuItem value="year">Year</MenuItem>
                             <MenuItem value="latest">Latest to be added</MenuItem>
                         </Select>
-                    </FormControl>
                 </Grid>
                 <Grid item>
                     <Button variant="outlined" onClick={handleLoadMore}>
