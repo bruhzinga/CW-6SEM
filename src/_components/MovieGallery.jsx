@@ -52,7 +52,9 @@ const MovieGallery = ({ categories, loadMore, cardsPerPage = 5 }) => {
         setStartIndex(startIndex + cardsPerPage);
     };
 
+    if (categories && movies.length > 0)
     return (
+
         <div style={{ marginLeft: '30px' }}>
             <div style={{ margin: '16px 0' }}>
                 {categories && (
@@ -95,6 +97,13 @@ const MovieGallery = ({ categories, loadMore, cardsPerPage = 5 }) => {
             </div>
         </div>
     );
+    else
+        return (
+           <div>
+
+           </div>
+        )
+
 };
 
 export default MovieGallery;
