@@ -13,6 +13,9 @@ function Movie(props) {
     const navigate = useNavigate();
     const [movie, setMovie] = useState({});
     const { id } = useParams();
+    const [trailerIds, setTrailerIds] = useState([]);
+    const [imageIds, setImageIds] = useState([]);
+    const [filmsInfo, setFilmsInfo] = useState([]);
     //if film with id does not exist, redirect to main page
     useEffect( () => {
         fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/${id}`)
@@ -21,7 +24,7 @@ function Movie(props) {
                 setMovie(movie);
                 setTrailerIds( movie.Video.filter(item => item.type === 'trailer').map(item => item.id));
                 setImageIds(movie.Image.map(item => item.id));
-                setFilmID(movie.Video.filter(item => item.type === 'movie')[0]?.id || 1 );
+                setFilmsInfo(movie.Video.filter(item => item.type === 'movie')  );
             })
             .catch((reason) => {
                 console.log("Movie with id " + id + " does not exist")
@@ -31,9 +34,7 @@ function Movie(props) {
 
     }, [id, navigate]);
 
-    const [trailerIds, setTrailerIds] = useState([]);
-    const [imageIds, setImageIds] = useState([]);
-    const [filmID, setFilmID] = useState(0);
+
 
 
 
@@ -48,7 +49,7 @@ function Movie(props) {
             <MovieHeader />
             <VideoCarousel VideoIds={trailerIds}/>
             <ImageCarousel imageIds={imageIds} />
-            <FilmViewer filmId={filmID}/>
+            <FilmViewer filmsInfo={filmsInfo}/>
             <ActorList/>
             <Comments/>
 
