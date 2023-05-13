@@ -3,9 +3,19 @@ import { AppModule } from './App/app.module';
 import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PrismaClientExceptionFilter } from './Exceptions/http-exception.filter';
+import * as fs from 'fs';
+import * as path from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const srcPath = path.resolve(__dirname, '..', 'src');
+  const httpsOptions = {
+    key: fs.readFileSync(path.resolve(srcPath, './security/RS-LAB26-ZDA.key')),
+    passphrase: 'SECRET',
+    cert: fs.readFileSync(path.resolve(srcPath, './security/LAB.crt')),
+  };
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
