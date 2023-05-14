@@ -5,21 +5,19 @@ import {
   OnGatewayInit,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  ConnectedSocket, WebSocketServer,
+  ConnectedSocket,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
-import {Server, Socket} from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { CommentsService } from '../comments/comments.service';
 import { MoviesService } from '../movies/movies.service';
 import { UsersService } from '../users/users.service';
 
 @WebSocketGateway()
-
-
 export class MovieCommentsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-
   @WebSocketServer()
   server: Server;
   constructor(
@@ -67,7 +65,6 @@ export class MovieCommentsGateway
         userID,
         data.comment,
       );
-      this.logger.log(comment);
       this.server.emit('comment:added', comment);
     } catch (error) {
       client.emit(

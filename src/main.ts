@@ -2,7 +2,7 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './App/app.module';
 import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { PrismaClientExceptionFilter } from './Exceptions/http-exception.filter';
+import { PrismaClientExceptionFilter } from './exceptions/http-exception.filter';
 import * as fs from 'fs';
 import * as path from 'path';
 
