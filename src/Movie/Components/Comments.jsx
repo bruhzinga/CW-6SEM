@@ -17,7 +17,7 @@ const FilmComments = () => {
     const [newComment, setNewComment] = useState("");
     const [newRating, setNewRating] = useState(0);
     const [deleteWarning, setDeleteWarning] = useState(null);
-    const [buttonDisable, setButtonDisable] = useState(true);
+    const [buttonDisable, setButtonDisable] = useState(false);
     const { id } = useParams();
     const socketRef = useRef(null);
 
@@ -42,7 +42,7 @@ const FilmComments = () => {
 
 
         socketRef.current.on('comment:error',() =>{
-            setButtonDisable("You have already reviewed this movie")
+            setDeleteWarning("You have already reviewed this movie")
         });
 
         socketRef.current.on('comment:added',(comment) =>{
@@ -100,6 +100,7 @@ const FilmComments = () => {
     const handleCommentDelete = (commentId) => {
         const data = {commentId:commentId,username:authUser.username};
         socketRef.current.emit("comments:delete", data);
+        setDeleteWarning("");
 
 
     };
@@ -116,9 +117,9 @@ const FilmComments = () => {
                 <Typography variant="h5" sx={{ mb: 2 }}>
                     Leave a Comment
                 </Typography>
-                {buttonDisable && (
+                {deleteWarning && (
                     <Typography variant="subtitle1" color="error">
-                        {buttonDisable}
+                        {deleteWarning}
                     </Typography>
                 )}
                 <Input
