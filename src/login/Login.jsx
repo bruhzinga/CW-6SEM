@@ -39,7 +39,6 @@ function Login() {
 
     return (
         <div className="col-md-6 offset-md-3 mt-5">
-
             <div className="card">
                 <h4 className="card-header">Login</h4>
                 <div className="card-body">
