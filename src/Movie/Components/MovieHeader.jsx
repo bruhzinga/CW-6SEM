@@ -71,9 +71,12 @@ const MovieHeader = () => {
         }
     }
 
-
-
-
+    const fetchWatchLater = async () => {
+        const data =  await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/watch-later`);
+        if(data.filter(movie => movie.movieId === +id).length > 0) {
+            setIsInWatchLater(true);
+        }
+    }
 
     const handleAddToFavorites =  async () => {
         setIsInFavorites(!isInFavorites);
@@ -84,9 +87,17 @@ const MovieHeader = () => {
         }
     };
 
-    const handleAddToWatchLater = () => {
+
+    const handleAddToWatchLater = async () => {
         setIsInWatchLater(!isInWatchLater);
-    };
+        if (isInWatchLater) {
+            await fetchWrapper.delete(`${import.meta.env.VITE_API_URL}/watch-later/${id}`);
+        } else {
+            await   fetchWrapper.post(`${import.meta.env.VITE_API_URL}/watch-later/${id}`);
+        }
+
+    }
+
     const { id } = useParams();
     const [movieData, setMovieData] = useState(null);
 
@@ -97,6 +108,7 @@ const MovieHeader = () => {
         };
         fetchData();
         fetchFavorites();
+        fetchWatchLater();
     }, [id]);
 
     const FetchMovieData = async (id) => {
