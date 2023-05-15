@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:admin@localhost:5432/PrimeVideo?schema=public"
+  url      = "postgres://primevideo:Jd1SOhLPG9BHo4hahpiiPpoMciBLm6J9@dpg-chgl3abhp8u065o3r990-a.frankfurt-postgres.render.com/primevideo_ya7v"
 }
 
 model Genre {
@@ -55,6 +55,7 @@ model Movie {
   Comment       Comment[]
   mainPosterId  Int?
   mainPoster    Image?           @relation("MainPoster", fields: [mainPosterId], references: [id])
+  WatchLater    WatchLater[]
 }
 
 model PeopleOnMovies {
@@ -69,6 +70,15 @@ model PeopleOnMovies {
 }
 
 model Favorite {
+  userId  String
+  movieId Int
+  User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@id([userId, movieId])
+}
+
+model WatchLater {
   userId  String
   movieId Int
   User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -108,15 +118,16 @@ model Role {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  username  String     @unique
-  password  String
-  email     String     @unique
-  createdOn DateTime   @default(now())
-  updatedOn DateTime   @default(now())
-  RoleId    Int
-  Role      Role       @relation(fields: [RoleId], references: [id])
-  Favorite  Favorite[]
-  History   History[]
-  Comment   Comment[]
+  id         String       @id @default(uuid())
+  username   String       @unique
+  password   String
+  email      String       @unique
+  createdOn  DateTime     @default(now())
+  updatedOn  DateTime     @default(now())
+  RoleId     Int
+  Role       Role         @relation(fields: [RoleId], references: [id])
+  Favorite   Favorite[]
+  History    History[]
+  Comment    Comment[]
+  WatchLater WatchLater[]
 }
