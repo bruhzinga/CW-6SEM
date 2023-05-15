@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Autocomplete, Button, TextField} from '@mui/material';
+import {Autocomplete, Button, TextField, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import fetchWrapper from "@/_helpers/fetch-wrapper";
 import axios from "axios";
@@ -42,6 +42,8 @@ const MovieAdminPanel = () => {
 
     const [movies, setMovies] = useState([]);
     const [selectedMovie, setSelectedMovie] = useState(null);
+
+    const [warning,setWaring] = useState("");
 
         const fetchMovies = async () => {
            const data = await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/movies/titles`);
@@ -185,9 +187,11 @@ const MovieAdminPanel = () => {
                 const index = updatedMovies.findIndex((movie) => movie.id === selectedMovie.id);
                 updatedMovies[index] = {id: selectedMovie.id, ...formData};
                 setMovies(updatedMovies);
+                setWaring('');
             })
             .catch((error) => {
                 console.error('Failed to update movie');
+                setWaring(error);
             });
 
 
@@ -224,10 +228,12 @@ const MovieAdminPanel = () => {
                 const updatedMovies = [...movies];
                 updatedMovies.push({id: data.id, ...formData});
                 setMovies(updatedMovies);
+                setWaring("");
             }
         )
             .catch((error) => {
                 console.error('Failed to add movie');
+                setWaring(error);
 
         });
     };
@@ -240,12 +246,18 @@ const MovieAdminPanel = () => {
                 const index = updatedMovies.findIndex((movie) => movie.id === selectedMovie.id);
                 updatedMovies.splice(index, 1);
                 setMovies(updatedMovies);
+                setWaring("");
             });
 
 };
 
 return (
     <>
+        {warning && (
+            <Typography variant="subtitle1" color="error">
+                {warning}
+            </Typography>
+        )}
         <Autocomplete
             id="movie-select"
             options={movies}
