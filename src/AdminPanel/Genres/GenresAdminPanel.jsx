@@ -12,26 +12,26 @@ const GenresAdminPanel = () => {
     useEffect(() => {
         fetchWrapper.get(`${import.meta.env.VITE_API_URL}/genres`)
             .then(data => setGenres(data))
-            .catch(error => console.error(error));
+            .catch(error => alert(error));
     }, []);
 
     const handleAdd = () => {
         fetchWrapper.post(`${import.meta.env.VITE_API_URL}/genres`, {name})
             .then(data => setGenres([...genres, data]))
-            .catch(error => console.error(error));
+            .catch(error => alert(error));
     };
 
     const handleUpdate = (id, name) => {
         fetchWrapper.put(`${import.meta.env.VITE_API_URL}/genres/${id}`, {name})
             .then(data => setGenres(genres.map(genre => genre.id === id ? { ...genre, name } : genre)))
-            .catch(error => console.error(error));
+            .catch(error => alert(error));
 
     };
 
     const handleDelete = (id) => {
         fetchWrapper.delete(`${import.meta.env.VITE_API_URL}/genres/${id}`)
             .then(() => setGenres(genres.filter(genre => genre.id !== id)))
-            .catch(error => console.error(error));
+            .catch(error => alert(error));
     };
 
     const handleSelectGenre = (genre) => {
