@@ -9,29 +9,44 @@ const GenresAdminPanel = () => {
     const [searchValue, setSearchValue] = useState('');
     const [selectedGenre, setSelectedGenre] = useState(null);
 
+
+    const  handleError =(error) => {
+        //[P2002]: Unique constraint failed on the fields: (`name`) find what's in []  using regex
+        const errorID = error.match(/\[(.*?)\]/)[1];
+        switch (errorID) {
+            case 'P2002':
+                alert('Genre with this name already exists');
+                break;
+            default:
+                alert(error);
+        }
+
+
+    }
+
     useEffect(() => {
         fetchWrapper.get(`${import.meta.env.VITE_API_URL}/genres`)
             .then(data => setGenres(data))
-            .catch(error => alert(error));
+            .catch(error => handleError(error));
     }, []);
 
     const handleAdd = () => {
         fetchWrapper.post(`${import.meta.env.VITE_API_URL}/genres`, {name})
             .then(data => setGenres([...genres, data]))
-            .catch(error => alert(error));
+            .catch(error => handleError(error));
     };
 
     const handleUpdate = (id, name) => {
         fetchWrapper.put(`${import.meta.env.VITE_API_URL}/genres/${id}`, {name})
             .then(data => setGenres(genres.map(genre => genre.id === id ? { ...genre, name } : genre)))
-            .catch(error => alert(error));
+            .catch(error => handleError(error));
 
     };
 
     const handleDelete = (id) => {
         fetchWrapper.delete(`${import.meta.env.VITE_API_URL}/genres/${id}`)
             .then(() => setGenres(genres.filter(genre => genre.id !== id)))
-            .catch(error => alert(error));
+            .catch(error => handleError(error));
     };
 
     const handleSelectGenre = (genre) => {
@@ -63,13 +78,18 @@ const GenresAdminPanel = () => {
                     />
                 )}
             />
-            <TextField label="Name" value={name} onChange={event => setName(event.target.value)} />
-            {selectedGenre && (
-                <Button variant="contained" onClick={handleUpdateName}>Update</Button>
-            )}
-            {!selectedGenre && (
-                <Button variant="contained" onClick={handleAdd}>Add</Button>
-            )}
+            <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                <TextField label="Name" value={name} onChange={(event) => setName(event.target.value)} />
+                {selectedGenre ? (
+                    <Button variant="contained" style={{ flex: 0.05 }} onClick={handleUpdateName}>
+                        Update
+                    </Button>
+                ) : (
+                    <Button variant="contained" style={{ flex: 0.05 }} onClick={handleAdd}>
+                        Add
+                    </Button>
+                )}
+            </div>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
