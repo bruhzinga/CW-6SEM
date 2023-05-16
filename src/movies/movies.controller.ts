@@ -9,11 +9,14 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Query,
+  Query, UseGuards,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './DTO/Create-movie-dto';
 import { Prisma } from '@prisma/client';
+import {HasRoles} from "../auth/has-roles.decorator";
+import {Role} from "../users/entities/Role";
+import {RolesGuard} from "../auth/roles.guard";
 
 @Controller('movies')
 export class MoviesController {
@@ -45,6 +48,8 @@ export class MoviesController {
   }
 
   @Post()
+  @HasRoles(Role.Admin)
+  @UseGuards(RolesGuard)
   async createMovie(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.createMovie(createMovieDto);
   }
@@ -83,6 +88,8 @@ export class MoviesController {
   }
 
   @Put(':id')
+  @HasRoles(Role.Admin)
+  @UseGuards(RolesGuard)
   async UpdateMovie(
     @Param('id', ParseIntPipe) id: string,
     @Body() movie: CreateMovieDto,
@@ -91,6 +98,8 @@ export class MoviesController {
   }
 
   @Delete(':id')
+  @HasRoles(Role.Admin)
+  @UseGuards(RolesGuard)
   async DeleteMovie(@Param('id', ParseIntPipe) id: string) {
     return this.moviesService.DeleteMovie(+id);
   }

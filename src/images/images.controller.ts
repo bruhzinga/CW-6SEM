@@ -8,7 +8,7 @@ import {
   Post,
   Res,
   StreamableFile,
-  UploadedFile,
+  UploadedFile, UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import * as fs from 'fs';
@@ -18,6 +18,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { Public } from '../auth/public-decorator';
 import { PrismaService } from '../prisma/prisma.service';
+import {HasRoles} from "../auth/has-roles.decorator";
+import {Role} from "../users/entities/Role";
+import {RolesGuard} from "../auth/roles.guard";
 
 const MulterOptions = {
   fileFilter: (req, file, cb) => {
@@ -37,6 +40,8 @@ export class ImagesController {
   ) {}
 
   @Post()
+  @HasRoles(Role.Admin)
+  @UseGuards(RolesGuard)
   @UseInterceptors(FileInterceptor('file', MulterOptions))
   async Upload(@UploadedFile() file: Express.Multer.File) {
     return await this.prisma.$transaction(async () => {
@@ -95,6 +100,8 @@ export class ImagesController {
   }*/
 
   @Delete(':id')
+  @HasRoles(Role.Admin)
+  @UseGuards(RolesGuard)
   async Delete(@Param('id') id: string) {
     const ImageData = await this.imagesService.findOne(+id);
     if (ImageData) {

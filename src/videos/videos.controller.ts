@@ -10,7 +10,7 @@ import {
   Patch,
   Post,
   Redirect,
-  UploadedFile,
+  UploadedFile, UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { VideosService } from './videos.service';
@@ -19,6 +19,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as fs from 'fs';
 import { Type } from './DTO/CreateVideoDto';
 import { Public } from '../auth/public-decorator';
+import {HasRoles} from "../auth/has-roles.decorator";
+import {Role} from "../users/entities/Role";
+import {RolesGuard} from "../auth/roles.guard";
 
 const MulterOptions = {
   fileFilter: (req, file, cb) => {
@@ -42,6 +45,8 @@ export class VideosController {
     private readonly prisma: PrismaService,
   ) {}
   @Post()
+  @HasRoles(Role.Admin)
+  @UseGuards(RolesGuard)
   @UseInterceptors(FileInterceptor('file'))
   async Upload(
     @UploadedFile() file: Express.Multer.File,
@@ -85,6 +90,8 @@ export class VideosController {
   }
 
   @Delete(':id')
+  @HasRoles(Role.Admin)
+  @UseGuards(RolesGuard)
   async deleteVideoAndUnlink(@Param('id') id: string) {
     const videoData = await this.videosService.findOne(+id);
     if (videoData) {
@@ -102,23 +109,5 @@ export class VideosController {
     }
   }
 
-  /* @Patch(':id')
-  @UseInterceptors(FileInterceptor('file'))
-  async updateVideo(
-    @Param('id') id: string,
-    @Body() body: { type: Type },
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    const { type } = body;
-    const VideoData = await this.videosService.findOne(+id);
-    if (!VideoData)
-      throw new HttpException('Video not found', HttpStatus.NOT_FOUND);
-    this.videosService.update(+id, { type: type || VideoData.type });
-    const filenameFormatted = file.originalname.replace(/ /g, '_');
-    const stream = fs.createWriteStream(
-      `FileStorage/Videos/${filenameFormatted}`,
-    );
-    stream.write(file.buffer);
-    return 'File updated successfully!';
-  }*/
+
 }
