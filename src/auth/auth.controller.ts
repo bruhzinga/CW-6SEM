@@ -46,6 +46,13 @@ export class AuthController {
     return await this.authService.login(loginUserDto);
   }
 
+  @Public()
+  @Post('forgot-password')
+  public async forgotPassword(@Body() body: { email: string }): Promise<any> {
+    console.log(body);
+    return await this.authService.forgotPassword(body.email);
+  }
+
   @Get('whoami')
   public async testAuth(@Req() req: any): Promise<UserDto> {
     return req.user;

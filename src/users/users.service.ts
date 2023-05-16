@@ -72,4 +72,18 @@ export class UsersService {
       },
     });
   }
+
+  async updatePassword(id: string, password: string) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    return this.prisma.user.update({
+      where: { id },
+      data: { password: hashedPassword },
+    });
+  }
+
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
+    });
+  }
 }

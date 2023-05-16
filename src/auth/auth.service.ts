@@ -9,12 +9,16 @@ import { JwtPayload } from './interfaces/payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import * as process from 'process';
 import { User } from '@prisma/client';
+import * as passwordGen from 'generate-password';
+import * as bcrypt from 'bcrypt';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
@@ -65,6 +69,26 @@ export class AuthService {
     return {
       expiresIn,
       accessToken,
+    };
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
+    const newPassword = passwordGen.generate({
+      length: 10,
+      numbers: true,
+    });
+    try {
+      await this.usersService.updatePassword(user.id, newPassword);
+      await this.mailService.SendNewPasswordEmail(email, newPassword);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return {
+      success: true,
     };
   }
 }
