@@ -44,7 +44,8 @@ function createExtraActions() {
 
     return {
         login: login(),
-        register: register()
+        register: register(),
+        forgotPassword: forgotPassword(),
     };
 
     function login() {
@@ -60,12 +61,21 @@ function createExtraActions() {
             async ({ username, email, password }) => await fetchWrapper.post(`${baseUrl}/register`, { username, email, password,role:"User"  })
         );
     }
+
+    function forgotPassword(){
+        return createAsyncThunk(
+            `${name}/forgot-password`,
+            async ({ email }) => await fetchWrapper.post(`${baseUrl}/forgot-password`, { email })
+        );
+    }
+
 }
 
 function createExtraReducers() {
     return {
         ...login(),
-        ...register()
+        ...register(),
+        ...forgotPassword()
     };
 
     function login() {
@@ -102,6 +112,23 @@ function createExtraReducers() {
             [fulfilled]: (state, action) => {
 
 
+                // get return url from location state or default to home page
+                const { from } = history.location.state || { from: { pathname: '/login' } };
+                history.navigate(from);
+            },
+            [rejected]: (state, action) => {
+                state.error = action.error;
+            }
+        };
+    }
+
+    function forgotPassword() {
+        let { pending, fulfilled, rejected } = extraActions.forgotPassword;
+        return {
+            [pending]: (state) => {
+                state.error = null;
+            },
+            [fulfilled]: (state, action) => {
                 // get return url from location state or default to home page
                 const { from } = history.location.state || { from: { pathname: '/login' } };
                 history.navigate(from);
