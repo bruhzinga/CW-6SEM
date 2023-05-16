@@ -1,17 +1,20 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
     Box,
     Button,
     Card,
     CardActions,
     CardContent,
-    CardMedia, FormControl, FormControlLabel,
+    CardMedia,
+    FormControl,
+    FormControlLabel,
     Grid,
-    Radio, RadioGroup,
+    Radio,
+    RadioGroup,
     TextField,
     Typography,
 } from "@mui/material";
-import {Delete, Save} from "@mui/icons-material";
+import { Delete, Save } from "@mui/icons-material";
 import Autocomplete from "@mui/material/Autocomplete";
 import fetchWrapper from "@/_helpers/fetch-wrapper";
 
@@ -57,7 +60,6 @@ const VideoAdminPanel = () => {
             .catch((error) => console.error(error));
     };
 
-
     const handleSave = () => {
         setLoading(true); // set loading to true
         // upload new video to server
@@ -84,22 +86,21 @@ const VideoAdminPanel = () => {
             });
     };
 
-
     const filteredVideos = videos.filter((video) => {
         return video.title.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
     return (
-        <Box sx={{p: 2}}>
+        <Box sx={{ p: 2 }}>
             <Typography variant="h4">Video Admin Panel</Typography>
-            <Grid container spacing={2} sx={{mt: 2}}>
+            <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid item xs={12}>
                     <Autocomplete
                         id="search"
                         freeSolo
                         options={videos.map((video) => video.title)}
                         onInputChange={(event, value) => setSearchTerm(value)}
-                        renderInput={(params) => (
+                        renderInput={(params ) => (
                             <TextField
                                 {...params}
                                 label="Search by Title"
@@ -110,13 +111,21 @@ const VideoAdminPanel = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <input type="file"  onChange={handleFileUpload} accept="video/*"/>
+                    <input type="file" onChange={handleFileUpload} accept="video/*" />
                 </Grid>
                 <Grid item xs={12}>
                     <FormControl component="fieldset">
                         <RadioGroup value={videoType} onChange={handleVideoTypeChange}>
-                            <FormControlLabel value="movie" control={<Radio />} label="Movie" />
-                            <FormControlLabel value="trailer" control={<Radio />} label="Trailer" />
+                            <FormControlLabel
+                                value="movie"
+                                control={<Radio />}
+                                label="Movie"
+                            />
+                            <FormControlLabel
+                                value="trailer"
+                                control={<Radio />}
+                                label="Trailer"
+                            />
                         </RadioGroup>
                     </FormControl>
                 </Grid>
@@ -132,7 +141,7 @@ const VideoAdminPanel = () => {
                 </Grid>
                 {filteredVideos.map((video) => (
                     <Grid item xs={12} md={6} lg={3} key={video.id}>
-                        <Card sx={{maxWidth: THUMBNAIL_SIZE}}>
+                        <Card sx={{ maxWidth: THUMBNAIL_SIZE }}>
                             <CardActions>
                                 <CardMedia
                                     component="video"
@@ -145,21 +154,33 @@ const VideoAdminPanel = () => {
                                 <Button
                                     size="small"
                                     color="error"
-                                    startIcon={<Delete/>}
+                                    startIcon={<Delete />}
                                     onClick={() => handleDelete(video.id)}
                                 >
                                     Delete
                                 </Button>
                             </CardActions>
                             <CardContent>
-
-                            <Typography variant="body2" color="text.secondary">
-                                {video.type}
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    style={{
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                    }}
+                                >
+                                    {video.type}
                                 </Typography>
+                                <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    component="div"
+                                    style={{
+                                        overflowWrap: "break-word",
 
-
-
-                                <Typography gutterBottom variant="h5" component="div">
+                                    }}
+                                >
                                     {video.title}
                                 </Typography>
                             </CardContent>
@@ -172,4 +193,3 @@ const VideoAdminPanel = () => {
 };
 
 export default VideoAdminPanel;
-

@@ -92,7 +92,7 @@ function Login() {
                             )}
                             <button
                                 disabled={isSubmitting}
-                                className="btn btn-link mt-3"
+                                className="btn btn-link mt-1"
                                 onClick={() => setForgotPassword(true)}
                             >
                                 Forgot password?
