@@ -77,7 +77,7 @@ const FilmComments = () => {
     const handleRatingChange = (event) => {
         const value = event.target.value;
         if(value < 0 || value > 10){
-            setButtonDisable(true);
+            return;
         }
         else {
             setNewRating(event.target.value);

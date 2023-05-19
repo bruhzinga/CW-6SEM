@@ -43,7 +43,7 @@ export function Main() {
             {genres.map((genre) => (
                 <MovieGallery
                     key={genre.name}
-                    categories={genre.name}
+                    category={genre.name}
                     loadMore={(category, startIndex, cardsPerPage) =>
                         fetchMovies(category, startIndex, cardsPerPage)
                     }

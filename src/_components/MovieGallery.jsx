@@ -27,7 +27,7 @@ const MovieTitle = styled(Typography)({
     textAlign: 'center',
 });
 
-const MovieGallery = ({ categories, loadMore, cardsPerPage = 5 }) => {
+const MovieGallery = ({ category, loadMore, cardsPerPage = 5 }) => {
     const [startIndex, setStartIndex] = useState(0);
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -36,9 +36,10 @@ const MovieGallery = ({ categories, loadMore, cardsPerPage = 5 }) => {
     useEffect(() => {
         const fetchMovies = async () => {
             setLoading(true);
-            const newMovies = await loadMore(categories, startIndex, cardsPerPage + 1);
-            setMovies((prevMovies) => [...prevMovies, ...newMovies]);
-            setHasMoreMovies(newMovies.length === cardsPerPage);
+            const newMovies = await loadMore(category, startIndex, cardsPerPage + 1);
+            console.log('NEW MOVIES', newMovies);
+            setMovies((prevMovies) => [...newMovies]);
+            setHasMoreMovies(newMovies.length > cardsPerPage);
             setLoading(false);
         };
         fetchMovies();
@@ -52,18 +53,20 @@ const MovieGallery = ({ categories, loadMore, cardsPerPage = 5 }) => {
         setStartIndex(startIndex + cardsPerPage);
     };
 
-    if (categories && movies.length > 0)
+    if (category && movies.length > 0)
     return (
 
         <div style={{ marginLeft: '30px' }}>
             <div style={{ margin: '16px 0' }}>
-                {categories && (
+                {category && (
                     <Typography variant="h4" gutterBottom>
-                        {categories}
+                        {category}
                     </Typography>
                 )}
                 <Grid container spacing={4} style={{}}>
-                    {movies?.map((movie) => (
+                    {movies?.map((movie,index) => {
+                        if(index < cardsPerPage)
+                        return (
                         <Grid item md={2.2} key={movie.id}>
                             <MovieCard>
                                 <Link to={`/movie/${movie.id}`}>
@@ -82,7 +85,7 @@ const MovieGallery = ({ categories, loadMore, cardsPerPage = 5 }) => {
                                 </Link>
                             </MovieCard>
                         </Grid>
-                    ))}
+                    )})}
                 </Grid>
                 <Button disabled={startIndex === 0} onClick={handleClickPrev}>
                     Prev

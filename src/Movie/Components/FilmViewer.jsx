@@ -30,7 +30,12 @@ const FilmViewer = ({ filmsInfo }) => {
             const data = await fetchWrapper.get(
                 `${import.meta.env.VITE_API_URL}/history/${id}`
             );
-            setPlayed(data[0].progress);
+            if(data.length === 0) {
+                setPlayed(0);
+            }
+            else{
+                setPlayed(data[0].progress);
+            }
         };
         FetchHistory();
         if (filmsInfo.length === 0) {
@@ -46,13 +51,18 @@ const FilmViewer = ({ filmsInfo }) => {
                 })
             );
         }
-
-        return function cleanup() {
-            fetchWrapper.post(`${import.meta.env.VITE_API_URL}/history/${id}`, {
-                progress: timeRef.current,
-            });
-        };
     }, [id, filmsInfo]);
+
+    useEffect(() => {
+        return function cleanup() {
+            const  sendHistory = async () => {
+                await fetchWrapper.post(`${import.meta.env.VITE_API_URL}/history/${id}`, {
+                    progress: timeRef.current? timeRef.current : 0,
+                });
+            }
+            sendHistory();
+        };
+    },[]);
 
     useEffect(() => {
             setSelectedFilm(formattedFilmInfo[0])
